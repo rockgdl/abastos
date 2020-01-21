@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="563.0" prefWidth="957.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fpiceno.abastos.ProductoController">
+<AnchorPane id="AnchorPane" prefHeight="563.0" prefWidth="957.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fpiceno.abastos.controller.ProductoController">
     <children>
         <Button fx:id="button" layoutX="784.0" layoutY="61.0" onAction="#handleButtonAction" text="Click Me!" />
         <Label fx:id="label" layoutX="444.0" layoutY="40.0" minHeight="16" minWidth="69" text="Producto" />
