@@ -39,6 +39,6 @@ public class ProductoController implements Initializable {
     @FXML
     public void guardaProducto()
     {
-        conceptoField.getText();
+        LOG.info(conceptoField.getText());
     }
 }
