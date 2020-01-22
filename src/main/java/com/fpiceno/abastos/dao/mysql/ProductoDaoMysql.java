@@ -5,9 +5,12 @@
  */
 package com.fpiceno.abastos.dao.mysql;
 
+import com.fpiceno.abastos.config.HibernateUtil;
 import com.fpiceno.abastos.entity.Producto;
 import com.fpicneo.abastos.dao.ProductoDao;
 import java.util.List;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
 
 /**
  *
@@ -17,22 +20,43 @@ public class ProductoDaoMysql implements ProductoDao{
 
     @Override
     public void agregarProducto(Producto producto) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Session session = getSession();
+        session.beginTransaction();
+
+        session.save(producto);
+        session.getTransaction().commit();
+
+        getSession().close();
     }
 
     @Override
     public void updateProducto(Producto producto) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+ Session session = getSession();
+        session.beginTransaction();
+        session.update(producto);
+        session.getTransaction().commit();
+
+        getSession().close();    }
 
     @Override
     public void eliminarProducto(Producto producto) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       Session session = getSession();
+        session.beginTransaction();
+
+        session.delete(producto);
+        session.getTransaction().commit();
+
+        getSession().close();
     }
 
     @Override
     public List<Producto> obtenerTodos() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Criteria cr = getSession().createCriteria(Producto.class);
+        return cr.list();    }
+    
+    public Session getSession() {
+
+        return HibernateUtil.getSession();
     }
     
 }

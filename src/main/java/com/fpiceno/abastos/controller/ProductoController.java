@@ -1,7 +1,12 @@
 package com.fpiceno.abastos.controller;
 
 import com.fpiceno.abastos.*;
+import com.fpiceno.abastos.dao.mysql.ProductoDaoMysql;
+import com.fpiceno.abastos.dto.UnidadMedida;
+import com.fpiceno.abastos.entity.Producto;
+import com.fpicneo.abastos.dao.ProductoDao;
 import java.net.URL;
+import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
@@ -25,6 +30,8 @@ public class ProductoController implements Initializable {
     @FXML
     private TextArea descripcionField;
     
+    private ProductoDao dao=new ProductoDaoMysql();
+    
     @FXML
     private void handleButtonAction(ActionEvent event) {
         System.out.println("You clicked me!");
@@ -39,6 +46,16 @@ public class ProductoController implements Initializable {
     @FXML
     public void guardaProducto()
     {
+        Producto producto= new Producto();
+        producto.setCostoTotal(Double.parseDouble(costoUnitField.getText()));
+        producto.setCostoUnitario(Double.parseDouble(costoUnitField.getText()));
+        producto.setDescripcion(descripcionField.getText());
+        producto.setFechaAlta(new Date());
+        producto.setNombre(conceptoField.getText());
+        producto.setUnidad(UnidadMedida.KG);
+        dao.agregarProducto(producto);
+        
+        
         LOG.info(conceptoField.getText());
     }
 }
