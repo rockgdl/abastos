@@ -1,0 +1,35 @@
+https://www.yoreparo.com/es/balanzas/preguntas/652408/codigo-en-visual-basic-para-comunicar-con-bascula-torrey
+
+un inicio al termino de las basculas, segun esta informacion es necesario comunicar al com enviandole una P para obtener el peso 
+
+
+Private Function LeerPuertoBascula() As String
+Dim cBuffer As String
+
+With MSCOMM1
+If .PortOpen = True Then .PortOpen = False
+
+.CommPort = 1 'Numero de puerto que deseas capturar, puede ser cualquier otro numero
+.Settings = "9600,N,8,1"
+.InputLen = 0 'Leer todos los datos
+.InputMode = comInputModeText 'Los datos se dan en modo texto
+.Handshaking = 0
+.PortOpen = True
+
+'limpiamos la variable que almacenara el peso que envie la bascula
+cBuffer = ""
+'En las basculas TORREY debes enviar el caracter 'P' para que te devuelva el peso, en este caso lo envio con Chr$(80)
+.Output = Chr$(80)
+
+'En este ciclo esta el truco para que tome la lectura de la bascula
+Do
+DoEvents
+cBuffer = cBuffer & .Input
+Loop Until InStr(cBuffer, "kg")
+'cerramos el puerto
+.PortOpen = False
+End With
+
+LeerPuertoBascula = cBuffer
+MsgBox cBuffer
+End Function
