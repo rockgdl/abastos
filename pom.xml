@@ -8,6 +8,15 @@
     <packaging>jar</packaging>
 
     <name>abastos</name>
+    
+    <repositories>
+    <repository>
+      <id>r232</id>
+      <name>your custom repo</name>
+      <url>https://jcenter.bintray.com/</url>
+    </repository>
+ 
+  </repositories>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -119,6 +128,11 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fazecast</groupId>
+            <artifactId>jSerialComm</artifactId>
+            <version>2.5.3</version>
         </dependency>
     </dependencies>
 </project>
