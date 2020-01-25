@@ -31,6 +31,8 @@ public class Producto {
     private String nombre;
     @Column(name="descripcion")
     private String descripcion;
+    @Column(name="cantidad")
+    private Integer cantidad;
     @Column(name="fechaAlta")
     private Date fechaAlta;
     @Enumerated(EnumType.STRING)
@@ -96,10 +98,19 @@ public class Producto {
         this.costoTotal = costoTotal;
     }
 
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
+    }
+
     @Override
     public String toString() {
-        return "Producto{" + "id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + ", fechaAlta=" + fechaAlta + ", unidad=" + unidad + ", costoUnitario=" + costoUnitario + ", costoTotal=" + costoTotal + '}';
+        return "Producto{" + "id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + ", cantidad=" + cantidad + ", fechaAlta=" + fechaAlta + ", unidad=" + unidad + ", costoUnitario=" + costoUnitario + ", costoTotal=" + costoTotal + '}';
     }
-    
+
+   
     
 }

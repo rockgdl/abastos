@@ -9,15 +9,22 @@ import com.fpiceno.abastos.dao.mysql.ProductoDaoMysql;
 import com.fpiceno.abastos.dto.UnidadMedida;
 import com.fpiceno.abastos.entity.Producto;
 import com.fpicneo.abastos.dao.ProductoDao;
+import com.mysql.cj.jdbc.exceptions.CommunicationsException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.ConnectException;
 import java.net.URL;
 import java.util.Date;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import org.hibernate.exception.JDBCConnectionException;
 
 /**
  * FXML Controller class
@@ -34,15 +41,19 @@ public class PrincipalController implements Initializable {
 
     
     @FXML
-     private BorderPane borderPane;
-      @FXML
+    private BorderPane borderPane;
+    @FXML
     private TextField conceptoField;
     @FXML
-    private TextField costoUnitField;
+    private TextField costoUnitField,pesoField;
     @FXML
     private TextArea descripcionField;
+    @FXML   
+    private ComboBox comboUnidadMedida;
     
     private ProductoDao dao=new ProductoDaoMysql();
+    
+    
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -50,6 +61,9 @@ public class PrincipalController implements Initializable {
         borderPane.setBottom(null);
         borderPane.setLeft(null);
         borderPane.setRight(null);
+        comboUnidadMedida.setItems(FXCollections.observableArrayList(UnidadMedida.values()));
+
+        
 
     }   
     
@@ -57,13 +71,25 @@ public class PrincipalController implements Initializable {
     public void guardaProducto()
     {
         Producto producto= new Producto();
-        producto.setCostoTotal(Double.parseDouble(costoUnitField.getText()));
+        producto.setCostoTotal(Double.parseDouble(pesoField.getText()));
         producto.setCostoUnitario(Double.parseDouble(costoUnitField.getText()));
         producto.setDescripcion(descripcionField.getText());
         producto.setFechaAlta(new Date());
         producto.setNombre(conceptoField.getText());
-        producto.setUnidad(UnidadMedida.KG);
-        dao.agregarProducto(producto);
+        producto.setUnidad((UnidadMedida)comboUnidadMedida.getValue());
+            try {
+                dao.agregarProducto(producto);
+            } catch (ConnectException ex) {
+                Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (JDBCConnectionException ex) {
+                Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (CommunicationsException ex) {
+                Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvocationTargetException ex) {
+                Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ExceptionInInitializerError ex) {
+                Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         
         
         LOG.info(conceptoField.getText());

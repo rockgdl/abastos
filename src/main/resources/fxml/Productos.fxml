@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<FlowPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="655.0" prefWidth="845.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fpiceno.abastos.controller.ProductosController">
+   <children>
+      <MenuBar prefHeight="25.0" prefWidth="845.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="Configuracion bascula">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Acerca de">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <AnchorPane prefHeight="376.0" prefWidth="609.0">
+         <children>
+            <TabPane layoutX="14.0" layoutY="8.0" prefHeight="615.0" prefWidth="821.0" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab text="productos">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <AnchorPane layoutY="7.0" prefHeight="331.0" prefWidth="586.0">
+                                 <children>
+                                    <TableView fx:id="tablaProductos" prefHeight="504.0" prefWidth="740.0">
+                                      <columns>
+                                          <TableColumn fx:id="columnId" prefWidth="75.0" text="id" />
+                                        <TableColumn fx:id="columnNombre" prefWidth="75.0" text="nombre" />
+                                        <TableColumn fx:id="columnCantidad" prefWidth="75.0" text="cantidad" />
+                                          <TableColumn fx:id="columnDescripcion" prefWidth="75.0" text="descripcion" />
+                                          <TableColumn fx:id="columnFecha" prefWidth="75.0" text="Fecha de alta" />
+                                          <TableColumn fx:id="columnCostoUnit" prefWidth="75.0" text="costo unitario" />
+                                          <TableColumn fx:id="columnCostoTotal" prefWidth="75.0" text="costo Total" />
+                                      </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                              <Button layoutX="748.0" layoutY="34.0" mnemonicParsing="false" onMouseClicked="#agregarProducto" text="Nuevo" />
+                              <Button layoutX="748.0" layoutY="108.0" mnemonicParsing="false" text="eliminar" />
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+                <Tab text="ALTAS">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  </content>
+                </Tab>
+                  <Tab text="Bajas">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                    </content>
+                  </Tab>
+              </tabs>
+            </TabPane>
+         </children>
+      </AnchorPane>
+   </children>
+</FlowPane>

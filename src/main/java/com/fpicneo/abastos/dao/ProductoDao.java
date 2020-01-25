@@ -6,7 +6,11 @@
 package com.fpicneo.abastos.dao;
 
 import com.fpiceno.abastos.entity.Producto;
+import com.mysql.cj.jdbc.exceptions.CommunicationsException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.ConnectException;
 import java.util.List;
+import org.hibernate.exception.JDBCConnectionException;
 
 /**
  *
@@ -14,10 +18,10 @@ import java.util.List;
  */
 public interface ProductoDao {
     
-    public void agregarProducto(Producto producto);
-    public void updateProducto(Producto producto);
-    public void eliminarProducto(Producto producto);
-    public List<Producto> obtenerTodos();
+    public void agregarProducto(Producto producto)throws ConnectException,JDBCConnectionException,CommunicationsException,InvocationTargetException,ExceptionInInitializerError;;
+    public void updateProducto(Producto producto)throws ConnectException,JDBCConnectionException,CommunicationsException,InvocationTargetException,ExceptionInInitializerError;;
+    public void eliminarProducto(Producto producto)throws ConnectException,JDBCConnectionException,CommunicationsException,InvocationTargetException,ExceptionInInitializerError;;
+    public List<Producto> obtenerTodos() throws ConnectException,JDBCConnectionException,CommunicationsException,InvocationTargetException,ExceptionInInitializerError;;
     
     
 }
