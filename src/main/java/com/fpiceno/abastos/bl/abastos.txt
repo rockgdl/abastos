@@ -33,3 +33,5 @@ End With
 LeerPuertoBascula = cBuffer
 MsgBox cBuffer
 End Function
+
+http://arduino-er.blogspot.com/2015/09/example-of-using-jssc-communicate.html
