@@ -6,6 +6,7 @@ import com.fpiceno.abastos.dto.UnidadMedida;
 import com.fpiceno.abastos.entity.Producto;
 import com.fpicneo.abastos.dao.ProductoDao;
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.ConnectException;
 import java.net.URL;
@@ -15,10 +16,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import org.hibernate.exception.JDBCConnectionException;
 
 public class ProductoController implements Initializable {
@@ -34,7 +38,7 @@ public class ProductoController implements Initializable {
     private TextField costoUnitField;
     @FXML
     private TextArea descripcionField;
-    
+    @FXML private FlowPane rootPane;
     private ProductoDao dao=new ProductoDaoMysql();
     
     @FXML
@@ -49,7 +53,7 @@ public class ProductoController implements Initializable {
     }    
     
     @FXML
-    public void guardaProducto()
+    public void guardaProducto() throws IOException
     {
         try {
             Producto producto= new Producto();
@@ -63,6 +67,11 @@ public class ProductoController implements Initializable {
             
             
             LOG.info(conceptoField.getText());
+            
+                    BorderPane pane;
+        LOG.info("cargando vista Administrador");
+        pane= FXMLLoader.load(getClass().getResource("/fxml/Principal.fxml"));
+        rootPane.getChildren().setAll(pane);
         } catch (ConnectException ex) {
             Logger.getLogger(ProductoController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (JDBCConnectionException ex) {

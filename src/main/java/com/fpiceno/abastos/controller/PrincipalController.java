@@ -10,6 +10,7 @@ import com.fpiceno.abastos.dto.UnidadMedida;
 import com.fpiceno.abastos.entity.Producto;
 import com.fpicneo.abastos.dao.ProductoDao;
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.ConnectException;
 import java.net.URL;
@@ -19,11 +20,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import org.hibernate.exception.JDBCConnectionException;
 
 /**
@@ -50,6 +53,8 @@ public class PrincipalController implements Initializable {
     private TextArea descripcionField;
     @FXML   
     private ComboBox comboUnidadMedida;
+       
+
     
     private ProductoDao dao=new ProductoDaoMysql();
     
@@ -68,7 +73,7 @@ public class PrincipalController implements Initializable {
     }   
     
      @FXML
-    public void guardaProducto()
+    public void guardaProducto() throws IOException
     {
         Producto producto= new Producto();
         producto.setCostoTotal(Double.parseDouble(pesoField.getText()));
@@ -91,8 +96,16 @@ public class PrincipalController implements Initializable {
                 Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
             }
         
-        
+        FlowPane pane;
+        LOG.info("cargando vista Administrador");
+        pane= FXMLLoader.load(getClass().getResource("/fxml/Productos.fxml"));
+        borderPane.getChildren().setAll(pane);
         LOG.info(conceptoField.getText());
+    }
+    
+    @FXML void eliminarProducto()
+    {
+        LOG.info("entrando a eliminar los productos de la tabla seleccionada");
     }
     
 }
