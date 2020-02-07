@@ -52,7 +52,7 @@ import org.hibernate.exception.JDBCConnectionException;
  */
 public class ProductosController implements Initializable {
     
-        private final org.apache.log4j.Logger log= org.apache.log4j.Logger.getLogger(ProductosController.class.getSimpleName());
+        private final org.apache.log4j.Logger LOG= org.apache.log4j.Logger.getLogger(ProductosController.class.getSimpleName());
 
 
        @FXML TableView<Producto> tablaProductos;
@@ -133,7 +133,7 @@ public class ProductosController implements Initializable {
      @FXML private void agregarProducto()throws IOException
      {
         BorderPane pane;
-        log.info("cargando vista Administrador");
+        LOG.info("cargando vista Administrador");
         pane= FXMLLoader.load(getClass().getResource("/fxml/Principal.fxml"));
         rootPane.getChildren().setAll(pane);
      }
@@ -285,7 +285,7 @@ public class ProductosController implements Initializable {
             if(event.getClickCount() == 2 && producto !=null){
                 FXMLLoader load = new FXMLLoader(getClass().getResource("/fxml/Principal.fxml"));
                 BorderPane pane;
-                log.info("cargando vista Editable");
+                LOG.info("cargando vista Editable");
                 pane= load.load();
                 PrincipalController controlador = load.getController();
                 controlador.cargarDatos(producto);
@@ -405,6 +405,26 @@ public class ProductosController implements Initializable {
         }
     }
     
+    
+    @FXML private void eliminarProducto()
+    {
+        
+        
+       // dao.eliminarProducto(null);
+    }
+    
+    @FXML private void openSerialConfig()
+    {
+            try {
+                LOG.info("ABRIENDO LA VENTANA DE CONFIGURACION");
+                AnchorPane pane;
+                LOG.info("cargando vista Administrador");
+                pane= FXMLLoader.load(getClass().getResource("/fxml/SerialFx.fxml"));
+                rootPane.getChildren().setAll(pane);
+            } catch (IOException ex) {
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }
     
     
     @FXML private void agregarBaja(ActionEvent event){

@@ -7,7 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.fpiceno.abastos.controller.SerialFxController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fpiceno.abastos.controller.SerialFxController">
     <stylesheets>
         <URL value="@/styles/serialfx.css" />
     </stylesheets>
@@ -16,10 +16,11 @@
       <Label layoutX="71.0" layoutY="80.0" text="Baudios" />
       <Label layoutX="72.0" layoutY="124.0" text="Paridad" />
       <Label layoutX="72.0" layoutY="179.0" text="Bit de paro:" />
-      <ComboBox layoutX="231.0" layoutY="28.0" prefWidth="150.0" />
+      <ComboBox fx:id="portList" layoutX="231.0" layoutY="28.0" prefWidth="150.0" />
       <ComboBox layoutX="231.0" layoutY="75.0" prefWidth="150.0" />
       <ComboBox layoutX="231.0" layoutY="130.0" prefWidth="150.0" />
       <ComboBox layoutX="231.0" layoutY="185.0" prefWidth="150.0" />
       <Button layoutX="260.0" layoutY="274.0" mnemonicParsing="false" text="Conectar" />
+      <Button layoutX="408.0" layoutY="274.0" mnemonicParsing="false" onAction="#setConfiguracion" text="Configurar" />
    </children>
 </AnchorPane>

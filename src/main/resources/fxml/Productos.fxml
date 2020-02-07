@@ -13,7 +13,8 @@
         <menus>
           <Menu mnemonicParsing="false" text="Configuracion bascula">
             <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
+              <MenuItem mnemonicParsing="false" onAction="#openSerialConfig" text="Configuracion Serial Port" />
+                  <MenuItem mnemonicParsing="false" onAction="#openSerialConfig" text="Configuracion Ethernet" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Acerca de">
@@ -32,7 +33,7 @@
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
                               <Button layoutX="894.0" layoutY="49.0" mnemonicParsing="false" onMouseClicked="#agregarProducto" text="Nuevo" />
-                              <Button layoutX="894.0" layoutY="113.0" mnemonicParsing="false" text="eliminar" />
+                              <Button layoutX="894.0" layoutY="113.0" mnemonicParsing="false" onAction="#eliminarProducto" text="eliminar" />
                               <TableView fx:id="tablaProductos" layoutX="26.0" layoutY="33.0" onMouseClicked="#editarProducto" prefHeight="504.0" prefWidth="854.0">
                                  <columns>
                                     <TableColumn fx:id="columnId" prefWidth="75.0" text="id" />

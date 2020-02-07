@@ -42,6 +42,16 @@ import java.util.Scanner;
  * @see java.io.InputStream
  * @see java.io.OutputStream
  */
+
+/*
+ * FABIAN PICENO ROQUE 
+ * 
+ * CLASE QUE IMPLEMENTA UN SERVICIO PARA EMAIL CON LA POSIBILIDAD DE ADJUNTAR 
+ * UN byte[]
+ * 24/07/15
+para correr esta clase es necesario click derecho run maven goals y poner esto
+exec:java -Dexec.mainClass="com.fpiceno.abogados.mail.EmailClient"  
+ */
 public class SerialPortTest
 {
 	private static final class PacketListener implements SerialPortPacketListener

@@ -5,12 +5,14 @@
  */
 package com.fpiceno.abastos.controller;
 
+import com.fazecast.jSerialComm.SerialPort;
 import com.fpiceno.abastos.dao.mysql.ProductoDaoMysql;
 import com.fpiceno.abastos.dto.UnidadMedida;
 import com.fpiceno.abastos.entity.Producto;
 import com.fpicneo.abastos.dao.ProductoDao;
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.ConnectException;
 import java.net.URL;
@@ -128,6 +130,23 @@ public class PrincipalController implements Initializable {
         this.producto = producto;
     }
 
+    
+    @FXML private void obtenerPeso()
+    {
+        LOG.info("INTENTANDO COMUNICAR AL PUERTO SERIAL SELECCIONADO");
+        
+            SerialPort comPort = SerialPort.getCommPorts()[0];
+            comPort.openPort();
+            comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0);
+            InputStream in = comPort.getInputStream();
+            try
+            {
+               for (int j = 0; j < 1000; ++j)
+                  System.out.print((char)in.read());
+               in.close();
+            } catch (Exception e) { e.printStackTrace(); }
+            comPort.closePort();
+    }
     /**
      * @return the producto
      */
