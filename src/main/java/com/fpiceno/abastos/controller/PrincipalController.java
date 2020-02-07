@@ -58,7 +58,7 @@ public class PrincipalController implements Initializable {
     
     private ProductoDao dao=new ProductoDaoMysql();
     
-    
+    private Producto producto;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -67,23 +67,29 @@ public class PrincipalController implements Initializable {
         borderPane.setLeft(null);
         borderPane.setRight(null);
         comboUnidadMedida.setItems(FXCollections.observableArrayList(UnidadMedida.values()));
-
-        
-
     }   
     
      @FXML
     public void guardaProducto() throws IOException
-    {
-        Producto producto= new Producto();
-        producto.setCostoTotal(Double.parseDouble(pesoField.getText()));
-        producto.setCostoUnitario(Double.parseDouble(costoUnitField.getText()));
-        producto.setDescripcion(descripcionField.getText());
-        producto.setFechaAlta(new Date());
-        producto.setNombre(conceptoField.getText());
-        producto.setUnidad((UnidadMedida)comboUnidadMedida.getValue());
+    {        
             try {
-                dao.agregarProducto(producto);
+                if(getProducto() != null){
+                    getProducto().setCostoTotal(Double.parseDouble(pesoField.getText()));
+                    getProducto().setCostoUnitario(Double.parseDouble(costoUnitField.getText()));
+                    getProducto().setDescripcion(descripcionField.getText());
+                    getProducto().setNombre(conceptoField.getText());
+                    getProducto().setUnidad((UnidadMedida)comboUnidadMedida.getValue());
+                    dao.updateProducto(producto);
+                }else{
+                    Producto newProducto= new Producto();
+                    newProducto.setCostoTotal(Double.parseDouble(pesoField.getText()));
+                    newProducto.setCostoUnitario(Double.parseDouble(costoUnitField.getText()));
+                    newProducto.setDescripcion(descripcionField.getText());
+                    newProducto.setFechaAlta(new Date());
+                    newProducto.setNombre(conceptoField.getText());
+                    newProducto.setUnidad((UnidadMedida)comboUnidadMedida.getValue());
+                    dao.agregarProducto(newProducto);
+                }
             } catch (ConnectException ex) {
                 Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (JDBCConnectionException ex) {
@@ -93,6 +99,10 @@ public class PrincipalController implements Initializable {
             } catch (InvocationTargetException ex) {
                 Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ExceptionInInitializerError ex) {
+                Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
+            }catch (NullPointerException ex){
+                Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
+            }catch(NumberFormatException ex){
                 Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
             }
         
@@ -106,6 +116,23 @@ public class PrincipalController implements Initializable {
     @FXML void eliminarProducto()
     {
         LOG.info("entrando a eliminar los productos de la tabla seleccionada");
+    }
+    
+    public void cargarDatos(Producto producto){
+        conceptoField.setText(producto.getNombre());
+        costoUnitField.setText(producto.getCostoUnitario().toString());
+        pesoField.setText(producto.getCostoTotal().toString());
+        descripcionField.setText(producto.getDescripcion());
+        comboUnidadMedida.setValue(producto.getUnidad());
+        
+        this.producto = producto;
+    }
+
+    /**
+     * @return the producto
+     */
+    public Producto getProducto() {
+        return producto;
     }
     
 }

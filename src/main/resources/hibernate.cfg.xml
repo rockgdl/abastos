@@ -34,5 +34,7 @@
     <property name="hbm2ddl.auto">update</property>
     <property name="hibernate.connection.release_mode">after_transaction</property>
     <mapping class="com.fpiceno.abastos.entity.Producto" file="" jar="" package="" resource=""/>
+    <mapping class="com.fpiceno.abastos.entity.Altas" file="" jar="" package="" resource=""/>
+    <mapping class="com.fpiceno.abastos.entity.Bajas" file="" jar="" package="" resource=""/>
   </session-factory>
 </hibernate-configuration>
