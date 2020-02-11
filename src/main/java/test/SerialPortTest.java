@@ -157,6 +157,7 @@ public class SerialPortTest
 		} catch (Exception e) { e.printStackTrace(); }
 		System.out.println("\nSetting read timeout mode to semi-blocking with no timeout");
 		ubxPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0);
+               
 		try
 		{
 			for (int i = 0; i < 3; ++i)
