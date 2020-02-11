@@ -117,6 +117,24 @@ public class InputStreamSerial {
 //              throw new IOException("Write error.");
 //            }
     
+          
+          
+            //Torrey
+            //byte[] buffer = Encoding.ASCII.GetBytes("P");
+            //PuertoSerieBascula.Write(buffer, 0, buffer.Length);
+
+//            if (Dispositivos_Bascula.Propiedades.Nombre == "Datalogic Magellan 8400")
+//            {
+//                byte[] inBuffer = new byte[] { 87 };
+//                PuertoSerieBascula.Write(inBuffer, 0, inBuffer.Length);
+//            }
+//            else //Torrey
+//            {
+//                byte[] inBuffer = new byte[] { 80 };
+//                PuertoSerieBascula.Write(inBuffer, 0, inBuffer.Length);
+//            }
+
+            //PuertoSerieBascula.Write("P");
     
     
     }
