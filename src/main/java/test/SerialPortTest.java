@@ -50,7 +50,7 @@ import java.util.Scanner;
  * UN byte[]
  * 24/07/15
 para correr esta clase es necesario click derecho run maven goals y poner esto
-exec:java -Dexec.mainClass="com.fpiceno.abogados.mail.EmailClient"  
+exec:java -Dexec.mainClass="test.SerialPortTest"  
  */
 public class SerialPortTest
 {

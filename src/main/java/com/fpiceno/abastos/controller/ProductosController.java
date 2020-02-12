@@ -324,6 +324,8 @@ public class ProductosController implements Initializable {
             
             alta.setProducto((Producto) boxProductoAlta.getValue());
             
+            System.out.println(alta.getProducto().getFechaAlta());
+            
             daoA.agregarAltas(alta);
             obtenerAltas();
         }catch(NumberFormatException ex){
@@ -403,14 +405,6 @@ public class ProductosController implements Initializable {
             alert.setHeaderText("Debe de seleccionar un campo");
             alert.show();
         }
-    }
-    
-    
-    @FXML private void eliminarProducto()
-    {
-        
-        
-       // dao.eliminarProducto(null);
     }
     
     @FXML private void openSerialConfig()
@@ -517,5 +511,12 @@ public class ProductosController implements Initializable {
             alert.setHeaderText("Debe de seleccionar un campo");
             alert.show();
         }
+    }
+    
+    @FXML private void agregarCliente(ActionEvent event) throws IOException{
+        BorderPane pane;
+        LOG.info("cargando vista Cliente");
+        pane= FXMLLoader.load(getClass().getResource("/fxml/Cliente.fxml"));
+        rootPane.getChildren().setAll(pane);
     }
 }

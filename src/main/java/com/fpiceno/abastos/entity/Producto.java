@@ -6,14 +6,20 @@
 package com.fpiceno.abastos.entity;
 
 import com.fpiceno.abastos.dto.UnidadMedida;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -41,7 +47,16 @@ public class Producto {
     private Double costoUnitario;
     @Column(name="costoTotal")
     private Double costoTotal;
+    
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, orphanRemoval = false) 
+    private List<Altas> listaAltas = new ArrayList<Altas>();
+    
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, orphanRemoval = false) 
+    private List<Bajas> listaBajas = new ArrayList<Bajas>();
 
+    @Column (name = "stock")
+    private Integer stock;
+    
     public Integer getId() {
         return id;
     }
@@ -108,9 +123,50 @@ public class Producto {
 
     @Override
     public String toString() {
-        return "Producto{" + "id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + ", cantidad=" + cantidad + ", fechaAlta=" + fechaAlta + ", unidad=" + unidad + ", costoUnitario=" + costoUnitario + ", costoTotal=" + costoTotal + '}';
+        //return "Producto{" + "id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + ", cantidad=" + cantidad + ", fechaAlta=" + fechaAlta + ", unidad=" + unidad + ", costoUnitario=" + costoUnitario + ", costoTotal=" + costoTotal + '}';
+        return this.nombre;
     }
 
-   
+    /**
+     * @return the stock
+     */
+    public Integer getStock() {
+        return stock;
+    }
+
+    /**
+     * @param stock the stock to set
+     */
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }   
+
+    /**
+     * @return the listaAltas
+     */
+    public List<Altas> getListaAltas() {
+        return listaAltas;
+    }
+
+    /**
+     * @param listaAltas the listaAltas to set
+     */
+    public void setListaAltas(List<Altas> listaAltas) {
+        this.listaAltas = listaAltas;
+    }
+
+    /**
+     * @return the listaBajas
+     */
+    public List<Bajas> getListaBajas() {
+        return listaBajas;
+    }
+
+    /**
+     * @param listaBajas the listaBajas to set
+     */
+    public void setListaBajas(List<Bajas> listaBajas) {
+        this.listaBajas = listaBajas;
+    }
     
 }
