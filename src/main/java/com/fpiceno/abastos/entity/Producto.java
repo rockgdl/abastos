@@ -48,10 +48,10 @@ public class Producto {
     @Column(name="costoTotal")
     private Double costoTotal;
     
-    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, orphanRemoval = false) 
+    @OneToMany( fetch = FetchType.LAZY, orphanRemoval = false, mappedBy = "producto") 
     private List<Altas> listaAltas = new ArrayList<Altas>();
     
-    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, orphanRemoval = false) 
+    @OneToMany( fetch = FetchType.LAZY, orphanRemoval = false, mappedBy ="producto" ) 
     private List<Bajas> listaBajas = new ArrayList<Bajas>();
 
     @Column (name = "stock")

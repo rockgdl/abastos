@@ -11,6 +11,7 @@ import com.fpicneo.abastos.dao.ProductoDao;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 /**
  *
@@ -41,22 +42,37 @@ public class ProductoDaoMysql implements ProductoDao{
     @Override
     public void eliminarProducto(Producto producto) {
        Session session = getSession();
-        session.beginTransaction();
 
+       Transaction tx = session.beginTransaction();
         session.delete(producto);
-        session.getTransaction().commit();
-
+      
+        tx.commit();
         getSession().close();
     }
 
     @Override
     public List<Producto> obtenerTodos() {
-        Criteria cr = getSession().createCriteria(Producto.class);
-        return cr.list();    }
+        
+         Session session = getSession();
+         Transaction tx = session.beginTransaction();
+         Criteria cr=session.createCriteria(Producto.class);
+       // Criteria cr = getSession().createCriteria(Producto.class);
+         List<Producto> lista=cr.list();
+        tx.commit();
+        return lista;   
+    }
     
     public Session getSession() {
+        
+        if (HibernateUtil.getSessionFactory()!=null &&  HibernateUtil.getSessionFactory().getCurrentSession().isOpen())
 
-        return HibernateUtil.getSession();
+        {
+            System.out.println("hay una session activa");
+                return HibernateUtil.getSessionFactory().getCurrentSession();
+        }
+    
+        else
+            return HibernateUtil.getSession();
     }
     
 }

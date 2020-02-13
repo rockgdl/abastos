@@ -9,6 +9,7 @@ import com.fpiceno.abastos.entity.Producto;
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.ConnectException;
+import java.sql.SQLException;
 import java.util.List;
 import org.hibernate.exception.JDBCConnectionException;
 
@@ -18,10 +19,10 @@ import org.hibernate.exception.JDBCConnectionException;
  */
 public interface ProductoDao {
     
-    public void agregarProducto(Producto producto)throws ConnectException,JDBCConnectionException,CommunicationsException,InvocationTargetException,ExceptionInInitializerError;;
-    public void updateProducto(Producto producto)throws ConnectException,JDBCConnectionException,CommunicationsException,InvocationTargetException,ExceptionInInitializerError;;
-    public void eliminarProducto(Producto producto)throws ConnectException,JDBCConnectionException,CommunicationsException,InvocationTargetException,ExceptionInInitializerError;;
-    public List<Producto> obtenerTodos() throws ConnectException,JDBCConnectionException,CommunicationsException,InvocationTargetException,ExceptionInInitializerError;;
+    public void agregarProducto(Producto producto)throws ConnectException,JDBCConnectionException,CommunicationsException,InvocationTargetException,ExceptionInInitializerError;
+    public void updateProducto(Producto producto)throws ConnectException,JDBCConnectionException,CommunicationsException,InvocationTargetException,ExceptionInInitializerError;
+    public void eliminarProducto(Producto producto)throws ConnectException,JDBCConnectionException,CommunicationsException,InvocationTargetException,ExceptionInInitializerError,SQLException;
+    public List<Producto> obtenerTodos() throws ConnectException,JDBCConnectionException,CommunicationsException,InvocationTargetException,ExceptionInInitializerError;
     
     
 }

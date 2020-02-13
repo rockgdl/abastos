@@ -25,7 +25,7 @@ public class Bajas {
     @Column(name = "fechaBaja", nullable = false)
     private Date fecha;
     
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
+    @ManyToOne( fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "producto", referencedColumnName = "id")
     private Producto producto;
     

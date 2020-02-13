@@ -37,7 +37,7 @@ public class Altas {
     @Column(name = "fechaAlta", nullable = false)
     private Date fecha;
     
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER ) 
+    @ManyToOne( fetch = FetchType.EAGER ) 
     @JoinColumn(name = "id_producto")
     private Producto producto;
     
