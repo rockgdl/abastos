@@ -17,6 +17,8 @@ import java.util.logging.Logger;
 /**
  *
  * @author fpiceno
+ * 
+ * exec:java -Dexec.mainClass="test.InputStreamSerial"
  */
 public class InputStreamSerial {
     
@@ -49,7 +51,7 @@ public class InputStreamSerial {
                 SerialPort comPort = ports[serialPortChoice];
 //    SerialPort comPort = SerialPort.getCommPorts()[2];
         comPort.openPort();
-        comPort.setComPortTimeouts(SerialPort.TIMEOUT_NONBLOCKING, 1000, 0);
+        comPort.setComPortTimeouts(SerialPort.TIMEOUT_NONBLOCKING, 100000, 0);
         
          os = new DataOutputStream(comPort.getOutputStream());
         is = new DataInputStream(comPort.getInputStream());
@@ -57,15 +59,23 @@ public class InputStreamSerial {
         
           if (os != null && is != null) 
         {
+            System.out.println("no es null el dataoutput ni el input");
+//        try {
             
-        try {
-            
-            System.out.println(" pude obtener los inputStrem  y los OutputStream "+is.readLine());
+            //System.out.println(" pude obtener los inputStrem  y los OutputStream "+is.readLine());
             try {
-                //  os.write("\nP\r".getBytes());
+                  os.write("\nP\r".getBytes());
                 
-                System.out.println("que tengo en el is "+is.available());
-                System.out.println(is.readLine());
+               // System.out.println("que tengo en el is "+is.available());
+                  
+                  if( (responseLine=is.readLine())!=null)
+                  {
+                      System.out.println("contesta con la linea "+responseLine);
+                  }
+                  else
+                  {
+                        System.out.println(is.readLine());
+                  }
 //               while ((responseLine = is.readLine()) != null)
 //                {
 //                     System.out.println(responseLine);
@@ -95,9 +105,9 @@ public class InputStreamSerial {
 //           in.close();
 //        } catch (Exception e) { e.printStackTrace(); }
 //             comPort.closePort();
- catch (IOException ex) {
-            Logger.getLogger(InputStreamSerial.class.getName()).log(Level.SEVERE, null, ex);
-        }
+// catch (IOException ex) {
+//            Logger.getLogger(InputStreamSerial.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         }
 
             
@@ -137,6 +147,6 @@ public class InputStreamSerial {
             //PuertoSerieBascula.Write("P");
     
     
-    }
+    
     
 }

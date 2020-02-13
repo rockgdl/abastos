@@ -14,6 +14,8 @@ import java.util.logging.Logger;
 /**
  *
  * @author fpiceno
+ * 
+ *  exec:java -Dexec.mainClass="test.writeBytesSerial"
  */
 public class writeBytesSerial {
     
@@ -56,6 +58,8 @@ public class writeBytesSerial {
             }
                     byte[] buffer = new byte[1024];
                     int bytesAvailable = comPort.bytesAvailable();
+                    
+                    System.out.println("bytes disponisbles "+bytesAvailable);
             int bytesRead = comPort.readBytes(buffer, Math.min(buffer.length, bytesAvailable));
             String response = new String(buffer, 0, bytesRead);
             

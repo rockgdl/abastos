@@ -135,6 +135,8 @@ public class SerialPortTest
 		ubxPort.setComPortTimeouts(SerialPort.TIMEOUT_NONBLOCKING, 1000, 0);
 		try
 		{
+                    
+                    
 			for (int i = 0; i < 3; ++i)
 			{
 				System.out.println("\nReading #" + i);
