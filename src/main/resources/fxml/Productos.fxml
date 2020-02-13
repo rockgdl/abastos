@@ -15,6 +15,11 @@
             <items>
               <MenuItem mnemonicParsing="false" onAction="#openSerialConfig" text="Configuracion Serial Port" />
                   <MenuItem mnemonicParsing="false" onAction="#openSerialConfig" text="Configuracion Ethernet" />
+                  <Menu mnemonicParsing="false" onAction="#openClientFx" text="Administrar Clientes">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#openClientFx" text="Agregar Clientes" />
+                    </items>
+                  </Menu>
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Acerca de">

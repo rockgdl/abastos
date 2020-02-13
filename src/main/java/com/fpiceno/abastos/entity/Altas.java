@@ -21,8 +21,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 /**
  *
@@ -39,9 +37,8 @@ public class Altas {
     @Column(name = "fechaAlta", nullable = false)
     private Date fecha;
     
-    @ManyToOne(optional = false) 
+    @ManyToOne( fetch = FetchType.EAGER ) 
     @JoinColumn(name = "id_producto")
-    //@OnDelete(action = OnDeleteAction.CASCADE)
     private Producto producto;
     
     @Enumerated(EnumType.STRING)

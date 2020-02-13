@@ -33,35 +33,29 @@ public class Producto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name="nombre", unique = true)
+    @Column(name="nombre")
     private String nombre;
-    
     @Column(name="descripcion")
     private String descripcion;
-    
     @Column(name="cantidad")
     private Integer cantidad;
-    
     @Column(name="fechaAlta")
     private Date fechaAlta;
-    
     @Enumerated(EnumType.STRING)
     private UnidadMedida unidad;
-    
     @Column(name="costoUnitario")
     private Double costoUnitario;
-    
     @Column(name="costoTotal")
     private Double costoTotal;
     
-    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true) 
+    @OneToMany( fetch = FetchType.LAZY, orphanRemoval = false, mappedBy = "producto") 
     private List<Altas> listaAltas = new ArrayList<Altas>();
     
-    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true) 
+    @OneToMany( fetch = FetchType.LAZY, orphanRemoval = false, mappedBy ="producto" ) 
     private List<Bajas> listaBajas = new ArrayList<Bajas>();
 
     @Column (name = "stock")
-    private Integer stock = 0;
+    private Integer stock;
     
     public Integer getId() {
         return id;
@@ -146,4 +140,33 @@ public class Producto {
     public void setStock(Integer stock) {
         this.stock = stock;
     }   
+
+    /**
+     * @return the listaAltas
+     */
+    public List<Altas> getListaAltas() {
+        return listaAltas;
+    }
+
+    /**
+     * @param listaAltas the listaAltas to set
+     */
+    public void setListaAltas(List<Altas> listaAltas) {
+        this.listaAltas = listaAltas;
+    }
+
+    /**
+     * @return the listaBajas
+     */
+    public List<Bajas> getListaBajas() {
+        return listaBajas;
+    }
+
+    /**
+     * @param listaBajas the listaBajas to set
+     */
+    public void setListaBajas(List<Bajas> listaBajas) {
+        this.listaBajas = listaBajas;
+    }
+    
 }

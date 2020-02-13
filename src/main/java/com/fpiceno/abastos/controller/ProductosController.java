@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.ConnectException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -43,6 +44,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Text;
+import org.hibernate.exception.ConstraintViolationException;
 import org.hibernate.exception.JDBCConnectionException;
 
 /**
@@ -87,6 +89,8 @@ public class ProductosController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
             try {
+                
+                LOG.info("CARGANDO TODAS LAS ALTAS DEL MES ");
                 obtenerProductos();
                 obtenerAltas();
                 obtenerBajas();
@@ -228,6 +232,11 @@ public class ProductosController implements Initializable {
                 alerta.show();
                 
             } catch (InvocationTargetException ex) {
+                       Alert alerta = new Alert(Alert.AlertType.ERROR);
+                
+                alerta.setHeaderText("ERROR DE InvocationTargetException ");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ExceptionInInitializerError ex) {
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
@@ -273,6 +282,10 @@ public class ProductosController implements Initializable {
                 alerta.show();
                 
             } catch (InvocationTargetException ex) {
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de InvocationTargetException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ExceptionInInitializerError ex) {
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
@@ -299,16 +312,52 @@ public class ProductosController implements Initializable {
                 
                 dao.eliminarProducto(tablaProductos.getSelectionModel().getSelectedItem());
             } catch (ConnectException ex) {
+                     Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de ConnectException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                  System.out.println("trono al eliminar la excepcion connecException");
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (JDBCConnectionException ex) {
+                     Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de JDBCConnectionException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                  System.out.println("trono al eliminar la excepcion JDBCConnectionException ");
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (CommunicationsException ex) {
+                  System.out.println("trono al eliminar la excepcion CommunicationsException" );
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (InvocationTargetException ex) {
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de InvocationTargetException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                  System.out.println("trono al eliminar la excepcion InvocationTargetException");
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ExceptionInInitializerError ex) {
+                
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de ExceptionInInitializerError");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                  System.out.println("trono al eliminar la excepcion ExceptionInInitializerError");
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (NullPointerException ex){
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de NullPointerException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                  System.out.println("trono al eliminar la excepcion NullPointerException");
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ConstraintViolationException ex) {
+                         Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de ConstraintViolationException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                System.out.println("trono al eliminar la excepcion ConstraintViolationException");
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             }
        }
@@ -362,6 +411,22 @@ public class ProductosController implements Initializable {
         } catch (ExceptionInInitializerError ex) {
             Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    
+    @FXML private void openClientFx()
+    {
+        LOG.info("CARGANDO la vista de clientes ");
+        
+              try {
+                LOG.info("ABRIENDO LA VENTANA DE CONFIGURACION");
+                AnchorPane pane;
+                LOG.info("cargando vista Administrador");
+                pane= FXMLLoader.load(getClass().getResource("/fxml/Cliente.fxml"));
+                rootPane.getChildren().setAll(pane);
+            } catch (IOException ex) {
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }
     
     @FXML private void EliminarAlta(ActionEvent event){

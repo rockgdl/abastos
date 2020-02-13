@@ -17,6 +17,9 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.exception.JDBCConnectionException;
 
+import org.hibernate.Transaction;
+
+
 /**
  *
  * @author fpiceno
@@ -46,26 +49,45 @@ public class ProductoDaoMysql implements ProductoDao{
     @Override
     public void eliminarProducto(Producto producto) {
        Session session = getSession();
-        session.beginTransaction();
 
+       Transaction tx = session.beginTransaction();
         session.delete(producto);
+
         session.flush();
         session.getTransaction().commit();
         
+
+      
+        tx.commit();
+
         getSession().close();
     }
 
     @Override
     public List<Producto> obtenerTodos() {
-        Criteria cr = getSession().createCriteria(Producto.class);
-        return cr.list();    }
+        
+         Session session = getSession();
+         Transaction tx = session.beginTransaction();
+         Criteria cr=session.createCriteria(Producto.class);
+       // Criteria cr = getSession().createCriteria(Producto.class);
+         List<Producto> lista=cr.list();
+        tx.commit();
+        return lista;   
+    }
     
     public Session getSession() {
+        
+        if (HibernateUtil.getSessionFactory()!=null &&  HibernateUtil.getSessionFactory().getCurrentSession().isOpen())
 
-        return HibernateUtil.getSession();
+        {
+            System.out.println("hay una session activa");
+                return HibernateUtil.getSessionFactory().getCurrentSession();
+        }
+    
+        else
+            return HibernateUtil.getSession();
     }
 
-    @Override
     public List<Producto> findProducto(Producto producto) throws ConnectException, JDBCConnectionException, CommunicationsException, InvocationTargetException, ExceptionInInitializerError {
         Criteria cr = getSession().createCriteria(Producto.class);
         cr.add(Restrictions.eq("nombre", producto.getNombre()));
