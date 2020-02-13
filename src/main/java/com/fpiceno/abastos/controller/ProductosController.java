@@ -32,7 +32,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -44,6 +46,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import org.hibernate.exception.ConstraintViolationException;
 import org.hibernate.exception.JDBCConnectionException;
 
@@ -414,16 +417,21 @@ public class ProductosController implements Initializable {
     }
     
     
-    @FXML private void openClientFx()
+    @FXML private void openClientFx(ActionEvent event)
     {
         LOG.info("CARGANDO la vista de clientes ");
         
               try {
                 LOG.info("ABRIENDO LA VENTANA DE CONFIGURACION");
-                AnchorPane pane;
+                BorderPane pane;
                 LOG.info("cargando vista Administrador");
                 pane= FXMLLoader.load(getClass().getResource("/fxml/Cliente.fxml"));
-                rootPane.getChildren().setAll(pane);
+               // rootPane.getChildren().setAll(pane);
+                Scene scene = new Scene(pane);
+                 Stage stage = null;
+                     stage= new Stage();
+                stage.setScene(scene);
+                stage.show();
             } catch (IOException ex) {
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             }
