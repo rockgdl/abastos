@@ -57,8 +57,8 @@ public class ProductosController implements Initializable {
 
        @FXML TableView<Producto> tablaProductos;
        @FXML TableColumn <Producto, String> columnNombre, columnDescripcion, columnFecha;
-       @FXML TableColumn <Producto, Double> columnCantidad, columnCostoUnit, columnCostoTotal;
-       @FXML TableColumn <Producto, Integer> columnId;
+       @FXML TableColumn <Producto, Double> columnCostoUnit, columnCostoTotal;
+       @FXML TableColumn <Producto, Integer> columnId, columnCantidad;
        @FXML private FlowPane rootPane;
 
        private ProductoDao dao=new ProductoDaoMysql();
@@ -147,7 +147,7 @@ public class ProductosController implements Initializable {
             columnId.setCellValueFactory(new PropertyValueFactory("id"));
             columnNombre.setCellValueFactory(new PropertyValueFactory("nombre"));
             columnDescripcion.setCellValueFactory(new PropertyValueFactory("descripcion"));
-            columnCantidad.setCellValueFactory(new PropertyValueFactory("cantidad"));
+            columnCantidad.setCellValueFactory(new PropertyValueFactory("stock"));
             columnFecha.setCellValueFactory(new PropertyValueFactory("fechaAlta"));
             columnCostoUnit.setCellValueFactory(new PropertyValueFactory("costoUnitario"));
             columnCostoTotal.setCellValueFactory(new PropertyValueFactory("costoTotal"));
@@ -313,9 +313,18 @@ public class ProductosController implements Initializable {
             }
        }
     
+    @FXML private void seleccionarAlta(MouseEvent event){
+        Altas alta = tablaAltas.getSelectionModel().getSelectedItem();
+        
+        if (event.getClickCount() == 2 && alta != null){
+            boxProductoAlta.setValue(alta.getProducto());
+            boxUnidadAlta.setValue(alta.getUnidad());
+            txtCantidadAlta.setText(alta.getCantidad().toString());
+            txtPrecioAlta.setText(alta.getPrecioVenta().toString());
+        }
+    }
     @FXML private void agregarAlta(ActionEvent event){
-        Altas alta = new Altas();
-            
+        Altas alta = new Altas();    
         try{
             alta.setCantidad(Double.parseDouble(txtCantidadAlta.getText()));
             alta.setFecha(new Date());
@@ -327,7 +336,19 @@ public class ProductosController implements Initializable {
             System.out.println(alta.getProducto().getFechaAlta());
             
             daoA.agregarAltas(alta);
+            System.out.println(alta.getProducto().getFechaAlta());
+            Producto producto = alta.getProducto();
+            
+            if(producto.getStock()== null){
+                producto.setStock( 0 + alta.getCantidad().intValue());
+            }else{
+                producto.setStock(producto.getStock()+alta.getCantidad().intValue());
+            }
+            
+            dao.updateProducto(producto);
+            
             obtenerAltas();
+            obtenerProductos();
         }catch(NumberFormatException ex){
             System.out.println(ex.getMessage()+" No es un numero");
         }catch (ConnectException ex) {

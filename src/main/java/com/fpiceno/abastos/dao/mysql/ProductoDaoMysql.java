@@ -8,9 +8,14 @@ package com.fpiceno.abastos.dao.mysql;
 import com.fpiceno.abastos.config.HibernateUtil;
 import com.fpiceno.abastos.entity.Producto;
 import com.fpicneo.abastos.dao.ProductoDao;
+import com.mysql.cj.jdbc.exceptions.CommunicationsException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.ConnectException;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.exception.JDBCConnectionException;
 
 /**
  *
@@ -44,8 +49,9 @@ public class ProductoDaoMysql implements ProductoDao{
         session.beginTransaction();
 
         session.delete(producto);
+        session.flush();
         session.getTransaction().commit();
-
+        
         getSession().close();
     }
 
@@ -57,6 +63,13 @@ public class ProductoDaoMysql implements ProductoDao{
     public Session getSession() {
 
         return HibernateUtil.getSession();
+    }
+
+    @Override
+    public List<Producto> findProducto(Producto producto) throws ConnectException, JDBCConnectionException, CommunicationsException, InvocationTargetException, ExceptionInInitializerError {
+        Criteria cr = getSession().createCriteria(Producto.class);
+        cr.add(Restrictions.eq("nombre", producto.getNombre()));
+        return cr.list();
     }
     
 }
