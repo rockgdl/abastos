@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="834.0" prefWidth="1311.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fpiceno.abastos.controller.ClienteController">
+   <center>
+      <Pane prefHeight="832.0" prefWidth="1343.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label layoutX="47.0" layoutY="142.0" text="Nombre:" />
+                  <Label layoutX="52.0" layoutY="201.0" text="RFC:" />
+                  <Label layoutX="50.0" layoutY="258.0" text="Domicilio:" />
+                  <Label layoutX="52.0" layoutY="324.0" text="Teléfono:" />
+                  <Label layoutX="56.0" layoutY="395.0" text="Correo:" />
+                  <TextField fx:id="txtNombre" layoutX="183.0" layoutY="137.0" onKeyReleased="#LimitarCaracteres" />
+                  <TextField fx:id="txtRFC" layoutX="183.0" layoutY="196.0" onKeyReleased="#LimitarCaracteres" />
+                  <TextField fx:id="txtDomicilio" layoutX="183.0" layoutY="253.0" onKeyReleased="#LimitarCaracteres" />
+                  <TextField fx:id="txtTelefono" layoutX="183.0" layoutY="319.0" onKeyReleased="#LimitarCaracteres" />
+                  <TextField fx:id="txtCorreo" layoutX="183.0" layoutY="390.0" onKeyReleased="#LimitarCaracteres" />
+                  <Button fx:id="btnAgregar" layoutX="47.0" layoutY="525.0" mnemonicParsing="false" onAction="#addCliente" text="Agregar" />
+                  <TableView fx:id="tablaClientes" layoutX="393.0" layoutY="137.0" onMouseClicked="#retornarCliente" prefHeight="617.0" prefWidth="831.0">
+                    <columns>
+                      <TableColumn fx:id="columnNombre" prefWidth="179.0" text="Nombre" />
+                      <TableColumn fx:id="columnCorreo" minWidth="6.0" prefWidth="169.0" text="Correo" />
+                        <TableColumn fx:id="columnTelefono" prefWidth="139.0" text="Teléfono" />
+                        <TableColumn fx:id="columnDomicilio" prefWidth="204.0" text="Domicilio" />
+                        <TableColumn fx:id="columnRFC" prefWidth="138.0" text="RFC" />
+                    </columns>
+                  </TableView>
+                  <Button fx:id="btnEliminar" layoutX="1141.0" layoutY="93.0" mnemonicParsing="false" onAction="#deleteCliente" text="Eliminar" />
+                  <TextField fx:id="txtBusqueda" layoutX="560.0" layoutY="93.0" onKeyReleased="#searchCliente" prefHeight="31.0" prefWidth="379.0" />
+                  <Label layoutX="415.0" layoutY="98.0" text="Buscar por nombre:" />
+                  <Button fx:id="btnGuardar" layoutX="169.0" layoutY="525.0" mnemonicParsing="false" onAction="#saveCliente" text="Guardar" />
+                  <Label fx:id="lblNombre" layoutX="276.0" layoutY="168.0" text="No permitido" textFill="RED" visible="false" />
+                  <Label fx:id="lblRFC" layoutX="276.0" layoutY="222.0" text="No permitido" textFill="RED" visible="false" />
+                  <Label fx:id="lblDomicilio" layoutX="276.0" layoutY="284.0" text="No permitido" textFill="RED" visible="false" />
+                  <Label fx:id="lblTelefono" layoutX="276.0" layoutY="345.0" text="No permitido" textFill="RED" visible="false" />
+                  <Label fx:id="lblCorreo" layoutX="276.0" layoutY="421.0" text="No permitido" textFill="RED" visible="false" />
+                  <Button layoutX="288.0" layoutY="525.0" mnemonicParsing="false" onAction="#limpiarCampos" text="Limpiar" />
+               </children>
+            </Pane>
+   </center>
+</BorderPane>

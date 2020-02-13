@@ -102,6 +102,7 @@
                               <Label layoutX="17.0" layoutY="101.0" text="Producto:" />
                               <Button layoutX="263.0" layoutY="340.0" mnemonicParsing="false" onAction="#EditarBaja" prefHeight="31.0" prefWidth="71.0" text="Editar" />
                               <Button layoutX="1077.0" layoutY="96.0" mnemonicParsing="false" onAction="#EliminarBaja" text="Eliminar" />
+                              <Button layoutX="1081.0" layoutY="164.0" mnemonicParsing="false" onAction="#agregarCliente" text="Clientes" />
                            </children></AnchorPane>
                     </content>
                   </Tab>

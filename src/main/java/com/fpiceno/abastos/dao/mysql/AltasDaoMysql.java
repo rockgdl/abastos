@@ -57,12 +57,11 @@ public class AltasDaoMysql implements AltasDao{
 
     @Override
     public List<Altas> obtenerTodos() throws ConnectException, JDBCConnectionException, CommunicationsException, InvocationTargetException, ExceptionInInitializerError {
-         Criteria cr = getSession().createCriteria(Altas.class);
+        Criteria cr = getSession().createCriteria(Altas.class);
         return cr.list(); 
     }
     
     public Session getSession() {
-
         return HibernateUtil.getSession();
     }
     
