@@ -51,7 +51,7 @@ public class InputStreamSerial {
                 SerialPort comPort = ports[serialPortChoice];
                 comPort.setBaudRate(9600);
 //                int newBaudRate, int newDataBits, int newStopBits, int newParity
-                //comPort.setComPortParameters(9600, 8, 1, 0);
+                comPort.setComPortParameters(9600, 8, 1, 0);
             
 
 //    SerialPort comPort = SerialPort.getCommPorts()[2];
