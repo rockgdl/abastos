@@ -49,6 +49,11 @@ public class InputStreamSerial {
 
                 
                 SerialPort comPort = ports[serialPortChoice];
+                comPort.setBaudRate(9600);
+//                int newBaudRate, int newDataBits, int newStopBits, int newParity
+                //comPort.setComPortParameters(9600, 8, 1, 0);
+            
+
 //    SerialPort comPort = SerialPort.getCommPorts()[2];
         comPort.openPort();
         comPort.setComPortTimeouts(SerialPort.TIMEOUT_NONBLOCKING, 100000, 0);
@@ -64,8 +69,9 @@ public class InputStreamSerial {
             
             //System.out.println(" pude obtener los inputStrem  y los OutputStream "+is.readLine());
             try {
-                  os.write("\nP\r".getBytes());
-                
+                 os.write("P\r\n".getBytes());
+                 // os.write("\nP\r".getBytes());
+              //  https://en.wikibooks.org/wiki/Serial_Programming/Serial_Java
                // System.out.println("que tengo en el is "+is.available());
                   
                   if( (responseLine=is.readLine())!=null)
