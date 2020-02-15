@@ -6,7 +6,7 @@ en las altas una vez que eliminas una alta no debe ir a eliminar el producto
 cuando cambies de pestañas debe refresarse la tabla de productos 
 
 
-
+     stage.initModality(Modality.APPLICATION_MODAL);
 
 
 un inicio al termino de las basculas, segun esta informacion es necesario comunicar al com enviandole una P para obtener el peso 
