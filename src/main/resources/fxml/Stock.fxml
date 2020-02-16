@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fpiceno.abastos.controller.StockController">
+   <center>
+      <Pane prefHeight="364.0" prefWidth="502.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="btnAgregar" layoutX="194.0" layoutY="328.0" mnemonicParsing="false" onAction="#agregar" text="Agregar" />
+            <Label layoutX="91.0" layoutY="231.0" text="Precio" />
+            <Label layoutX="91.0" layoutY="190.0" text="Unidad" />
+            <Label layoutX="91.0" layoutY="153.0" text="Cantidad" />
+            <TextField fx:id="txtPrecio" layoutX="189.0" layoutY="226.0" prefHeight="31.0" prefWidth="223.0" />
+            <ComboBox fx:id="boxUnidad" layoutX="189.0" layoutY="185.0" prefHeight="31.0" prefWidth="223.0" />
+            <TextField fx:id="txtCantidad" layoutX="189.0" layoutY="148.0" prefHeight="31.0" prefWidth="223.0" />
+            <ComboBox fx:id="boxProducto" layoutX="187.0" layoutY="107.0" prefHeight="31.0" prefWidth="226.0" />
+            <Label layoutX="89.0" layoutY="112.0" text="Producto:" />
+            <Button fx:id="btnEditar" layoutX="336.0" layoutY="328.0" mnemonicParsing="false" onAction="#editar" prefHeight="31.0" prefWidth="71.0" text="Editar" />
+            <ComboBox fx:id="boxCliente" layoutX="189.0" layoutY="270.0" prefHeight="31.0" prefWidth="223.0" visible="false" />
+         </children>
+      </Pane>
+   </center>
+</BorderPane>

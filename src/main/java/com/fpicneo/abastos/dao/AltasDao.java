@@ -6,9 +6,11 @@
 package com.fpicneo.abastos.dao;
 
 import com.fpiceno.abastos.entity.Altas;
+import com.fpiceno.abastos.entity.Producto;
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.ConnectException;
+import java.util.Date;
 import java.util.List;
 import org.hibernate.exception.JDBCConnectionException;
 
@@ -21,4 +23,7 @@ public interface AltasDao {
     public void updateAltas(Altas alta)throws ConnectException,JDBCConnectionException,CommunicationsException,InvocationTargetException,ExceptionInInitializerError;;
     public void eliminarAltas(Altas alta)throws ConnectException,JDBCConnectionException,CommunicationsException,InvocationTargetException,ExceptionInInitializerError;;
     public List<Altas> obtenerTodos() throws ConnectException,JDBCConnectionException,CommunicationsException,InvocationTargetException,ExceptionInInitializerError;;
+    public List<Altas> findAltaWhithProducto(Producto producto) throws ConnectException,JDBCConnectionException,CommunicationsException,InvocationTargetException,ExceptionInInitializerError;;
+    public List<Altas> findAltaWhithFecha(Date fechaInicio, Date fechaFin) throws ConnectException,JDBCConnectionException,CommunicationsException,InvocationTargetException,ExceptionInInitializerError;;
+    public List<Altas> findAltaWhithProductoAndFecha (Producto producto, Date fechaInicio, Date fechaFin)throws ConnectException,JDBCConnectionException,CommunicationsException,InvocationTargetException,ExceptionInInitializerError;;
 }

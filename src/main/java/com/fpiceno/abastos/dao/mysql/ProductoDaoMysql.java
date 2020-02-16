@@ -55,9 +55,7 @@ public class ProductoDaoMysql implements ProductoDao{
 
         session.flush();
         session.getTransaction().commit();
-        
-
-      
+       
         tx.commit();
 
         getSession().close();
