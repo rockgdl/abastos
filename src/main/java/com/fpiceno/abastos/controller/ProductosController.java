@@ -8,13 +8,17 @@ package com.fpiceno.abastos.controller;
 
 import com.fpiceno.abastos.dao.mysql.AltasDaoMysql;
 import com.fpiceno.abastos.dao.mysql.BajasDaoMysql;
+import com.fpiceno.abastos.dao.mysql.ClienteDaoMysql;
 import com.fpiceno.abastos.dao.mysql.ProductoDaoMysql;
+import com.fpiceno.abastos.dto.AutoCompleteBox;
 import com.fpiceno.abastos.dto.UnidadMedida;
 import com.fpiceno.abastos.entity.Altas;
 import com.fpiceno.abastos.entity.Bajas;
+import com.fpiceno.abastos.entity.Cliente;
 import com.fpiceno.abastos.entity.Producto;
 import com.fpicneo.abastos.dao.AltasDao;
 import com.fpicneo.abastos.dao.BajasDao;
+import com.fpicneo.abastos.dao.ClienteDao;
 import com.fpicneo.abastos.dao.ProductoDao;
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 import java.io.IOException;
@@ -22,6 +26,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.ConnectException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -36,6 +41,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -47,6 +53,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.hibernate.SessionException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.hibernate.exception.JDBCConnectionException;
 
@@ -63,7 +70,7 @@ public class ProductosController implements Initializable {
        @FXML TableView<Producto> tablaProductos;
        @FXML TableColumn <Producto, String> columnNombre, columnDescripcion, columnFecha;
        @FXML TableColumn <Producto, Double> columnCostoUnit, columnCostoTotal;
-       @FXML TableColumn <Producto, Integer> columnId, columnCantidad;
+       @FXML TableColumn <Producto, Integer> columnId, columnStock;
        @FXML private FlowPane rootPane;
 
        private ProductoDao dao=new ProductoDaoMysql();
@@ -77,8 +84,8 @@ public class ProductosController implements Initializable {
        private ObservableList <Altas> oblistAltas= FXCollections.observableArrayList();
        private AltasDao daoA=new AltasDaoMysql();
        
-       @FXML TextField txtPrecioAlta, txtCantidadAlta;
-       @FXML ComboBox boxProductoAlta, boxUnidadAlta;
+       @FXML DatePicker fechaInicioAlta, fechaFinAlta;
+       @FXML ComboBox <Producto> boxProductoAlta;
        
        @FXML TableView<Bajas> tablaBajas;
        @FXML TableColumn <Bajas, String> columnFechaBajas, columnProductoBajas, columnUnidadBajas;
@@ -86,8 +93,15 @@ public class ProductosController implements Initializable {
        @FXML TableColumn <Bajas, Integer> columnIdBajas, columnCantidadBajas;
        private ObservableList <Bajas> oblistBajas= FXCollections.observableArrayList();
        private BajasDao daoB=new BajasDaoMysql();
-       @FXML TextField txtPrecioBaja, txtCantidadBaja;
-       @FXML ComboBox boxProductoBaja, boxUnidadBaja;
+       private ClienteDao daoC = new ClienteDaoMysql();
+       
+       @FXML DatePicker fechaInicioBaja, fechaFinBaja;
+       @FXML ComboBox <Producto> boxProductoBaja;
+//       @FXML TextField txtPrecioBaja, txtCantidadBaja;
+//       @FXML ComboBox boxProductoBaja, boxUnidadBaja;
+//       @FXML ComboBox<Cliente> boxCliente;
+       
+       
        
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -99,13 +113,19 @@ public class ProductosController implements Initializable {
                 obtenerBajas();
                 
                 boxProductoAlta.getItems().setAll(dao.obtenerTodos());
-                boxUnidadAlta.getItems().setAll(UnidadMedida.values());
-                
                 boxProductoBaja.getItems().setAll(dao.obtenerTodos());
-                boxUnidadBaja.getItems().addAll(UnidadMedida.values());
+                //boxOpcion.getItems().set(1, columnId);
+                
+                
+                //boxProductoBaja.getItems().setAll(dao.obtenerTodos());
+                //boxUnidadBaja.getItems().addAll(UnidadMedida.values());
+                //boxCliente.getItems().addAll(daoC.read());
+                
+                //inicializamos para el autocompletado de los combobox
+                //new AutoCompleteBox(boxCliente);
                 
             } catch (ConnectException ex) {
-                
+                LOG.error("excepcion de tipo ConnectException"+ ex);
                 Alert alerta = new Alert(Alert.AlertType.ERROR);
                 
                 alerta.setHeaderText("No se pudo conectar a mysql");
@@ -154,9 +174,9 @@ public class ProductosController implements Initializable {
             columnId.setCellValueFactory(new PropertyValueFactory("id"));
             columnNombre.setCellValueFactory(new PropertyValueFactory("nombre"));
             columnDescripcion.setCellValueFactory(new PropertyValueFactory("descripcion"));
-            columnCantidad.setCellValueFactory(new PropertyValueFactory("stock"));
+            columnStock.setCellValueFactory(new PropertyValueFactory("stock"));
             columnFecha.setCellValueFactory(new PropertyValueFactory("fechaAlta"));
-            columnCostoUnit.setCellValueFactory(new PropertyValueFactory("costoUnitario"));
+//            columnCostoUnit.setCellValueFactory(new PropertyValueFactory("costoUnitario"));
             columnCostoTotal.setCellValueFactory(new PropertyValueFactory("costoTotal"));
             
             
@@ -296,7 +316,7 @@ public class ProductosController implements Initializable {
        }
        
        
-       @FXML private void editarProducto(MouseEvent event) throws IOException{
+    @FXML private void editarProducto(MouseEvent event) throws IOException{
            Producto producto = tablaProductos.getSelectionModel().getSelectedItem();
             if(event.getClickCount() == 2 && producto !=null){
                 FXMLLoader load = new FXMLLoader(getClass().getResource("/fxml/Principal.fxml"));
@@ -309,7 +329,7 @@ public class ProductosController implements Initializable {
             }
        }
        
-       @FXML private void eliminarProducto(ActionEvent event){
+    @FXML private void eliminarProducto(ActionEvent event){
             try {
                 ProductoDao dao = new ProductoDaoMysql();
                 
@@ -365,60 +385,87 @@ public class ProductosController implements Initializable {
             }
        }
     
-    @FXML private void seleccionarAlta(MouseEvent event){
-        Altas alta = tablaAltas.getSelectionModel().getSelectedItem();
+    @FXML private void seleccionarAlta(MouseEvent event) throws IOException{
+        Altas alta = (Altas) tablaAltas.getSelectionModel().getSelectedItem();
         
         if (event.getClickCount() == 2 && alta != null){
-            boxProductoAlta.setValue(alta.getProducto());
-            boxUnidadAlta.setValue(alta.getUnidad());
-            txtCantidadAlta.setText(alta.getCantidad().toString());
-            txtPrecioAlta.setText(alta.getPrecioVenta().toString());
-        }
-    }
-    @FXML private void agregarAlta(ActionEvent event){
-        Altas alta = new Altas();    
-        try{
-            alta.setCantidad(Double.parseDouble(txtCantidadAlta.getText()));
-            alta.setFecha(new Date());
-            alta.setPrecioVenta(Double.parseDouble(txtPrecioAlta.getText()));
-            alta.setUnidad((UnidadMedida) boxUnidadAlta.getValue());
             
-            alta.setProducto((Producto) boxProductoAlta.getValue());
+            BorderPane pane;
+            LOG.info("cargando vista editar stock alta");
+
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Stock.fxml"));
+
+            pane = loader.load();
+
+            StockController controller = loader.getController();
+            controller.habilitarCampos(true, true);
+            controller.cargarDatos(alta.getProducto(), alta.getCantidad(), alta.getUnidad(), alta.getPrecioVenta());
+            controller.setIdentificador(alta.getId());
+            rootPane.getChildren().setAll(pane);
             
-            System.out.println(alta.getProducto().getFechaAlta());
-            
-            daoA.agregarAltas(alta);
-            System.out.println(alta.getProducto().getFechaAlta());
-            Producto producto = alta.getProducto();
-            
-            if(producto.getStock()== null){
-                producto.setStock( 0 + alta.getCantidad().intValue());
-            }else{
-                producto.setStock(producto.getStock()+alta.getCantidad().intValue());
-            }
-            
-            dao.updateProducto(producto);
-            
-            obtenerAltas();
-            obtenerProductos();
-        }catch(NumberFormatException ex){
-            System.out.println(ex.getMessage()+" No es un numero");
-        }catch (ConnectException ex) {
-            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JDBCConnectionException ex) {
-            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (CommunicationsException ex) {
-            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvocationTargetException ex) {
-            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ExceptionInInitializerError ex) {
-            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+//            boxProductoAlta.setValue(alta.getProducto());
+//            boxUnidadAlta.setValue(alta.getUnidad());
+//            txtCantidadAlta.setText(alta.getCantidad().toString());
+//            txtPrecioAlta.setText(alta.getPrecioVenta().toString());
         }
     }
     
-    
-    @FXML private void openClientFx(ActionEvent event)
-    {
+    @FXML private void agregarAlta(ActionEvent event) throws IOException{
+        BorderPane pane;
+        LOG.info("cargando vista stock baja");
+        
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Stock.fxml"));
+        
+        pane = loader.load();
+        
+        StockController controller = loader.getController();
+        controller.habilitarCampos(false, true);
+        
+        
+        
+        rootPane.getChildren().setAll(pane);
+//        Altas alta = new Altas();    
+//        try{
+//            alta.setCantidad(Double.parseDouble(txtCantidadAlta.getText()));
+//            alta.setFecha(new Date());
+//            alta.setPrecioVenta(Double.parseDouble(txtPrecioAlta.getText()));
+//            alta.setUnidad((UnidadMedida) boxUnidadAlta.getValue());
+//            
+//            alta.setProducto((Producto) boxProductoAlta.getValue());
+//            
+//            System.out.println(alta.getProducto().getFechaAlta());
+//            
+//            daoA.agregarAltas(alta);
+//            System.out.println(alta.getProducto().getFechaAlta());
+//            Producto producto = alta.getProducto();
+//            
+//            if(producto.getStock()== null){
+//                producto.setStock( 0 + alta.getCantidad().intValue());
+//            }else{
+//                producto.setStock(producto.getStock()+alta.getCantidad().intValue());
+//            }
+//            
+//            dao.updateProducto(producto);
+//            
+//            obtenerAltas();
+//            obtenerProductos();
+//        }catch(NumberFormatException ex){
+//            System.out.println(ex.getMessage()+" No es un numero");
+//        }catch (ConnectException ex) {
+//            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (JDBCConnectionException ex) {
+//            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (CommunicationsException ex) {
+//            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (InvocationTargetException ex) {
+//            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (ExceptionInInitializerError ex) {
+//            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+    }
+   
+    @FXML private void openClientFx(ActionEvent event){
         LOG.info("CARGANDO la vista de clientes ");
         
               try {
@@ -438,12 +485,103 @@ public class ProductosController implements Initializable {
     }
     
     @FXML private void EliminarAlta(ActionEvent event){
-        Altas alta = tablaAltas.getSelectionModel().getSelectedItem();
+        Altas alta = (Altas) tablaAltas.getSelectionModel().getSelectedItem();
         
         if(alta != null){
             try {
                 daoA.eliminarAltas(alta);
-                obtenerAltas();
+                
+            } catch (ConnectException ex) {
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (JDBCConnectionException ex) {
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (CommunicationsException ex) {
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvocationTargetException ex) {
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ExceptionInInitializerError ex) {
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SessionException ex){
+                System.out.println("La sesion esta cerrada");
+            }
+            
+            obtenerAltas();
+        }else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Debe de seleccionar un campo");
+            alert.show();
+        }
+    }
+    
+    @FXML private void EditarAlta(ActionEvent event) throws IOException{
+             
+//        Altas alta = (Altas) tablaAltas.getSelectionModel().getSelectedItem();
+//        if(alta !=null ){ 
+//            try{
+//
+//                if(!txtCantidadAlta.getText().equals("")){
+//                    alta.setCantidad(Double.parseDouble(txtCantidadAlta.getText()));
+//                }
+//                
+//                if(!txtPrecioAlta.getText().equals("")){
+//                    alta.setPrecioVenta(Double.parseDouble(txtPrecioAlta.getText()));
+//                }
+//                
+//                alta.setUnidad((UnidadMedida) boxUnidadAlta.getValue());
+//
+//                alta.setProducto((Producto) boxProductoAlta.getValue());
+//
+//                daoA.updateAltas(alta);
+//                obtenerAltas();
+//            }catch(NumberFormatException ex){
+//                System.out.println(ex.getMessage()+" No es un numero");
+//            }catch (ConnectException ex) {
+//                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+//            } catch (JDBCConnectionException ex) {
+//                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+//            } catch (CommunicationsException ex) {
+//                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+//            } catch (InvocationTargetException ex) {
+//                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+//            } catch (ExceptionInInitializerError ex) {
+//                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        }else{
+//            Alert alert = new Alert(Alert.AlertType.ERROR);
+//            alert.setHeaderText("Debe de seleccionar un campo");
+//            alert.show();
+//        }
+    }
+    
+    @FXML private void buscarAlta(ActionEvent event){
+            try {
+                tablaAltas.getItems().clear();
+                Date fechaInicio = null, fechaFin = null;
+                
+                if(fechaFinAlta.getValue() == null){
+                    fechaFin = new Date();
+                }else{
+                    fechaFin = Date.from(fechaFinAlta.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+                    fechaFin.setHours(23);
+                    fechaFin.setMinutes(59);
+                    fechaFin.setSeconds(59);
+                }
+                
+                if(boxProductoAlta.getValue() != null && fechaInicioAlta.getValue() != null){
+                    fechaInicio = Date.from(fechaInicioAlta.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+                    oblistAltas.setAll(daoA.findAltaWhithProductoAndFecha(boxProductoAlta.getValue(), fechaInicio, fechaFin));
+                    
+                    
+                }else if (boxProductoAlta.getValue() != null){
+                    oblistAltas.setAll(daoA.findAltaWhithProducto(boxProductoAlta.getValue()));
+                    
+                }else if (fechaInicioAlta.getValue() != null){
+                    fechaInicio = Date.from(fechaInicioAlta.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+                    oblistAltas.setAll(daoA.findAltaWhithFecha(fechaInicio, fechaFin));
+                }
+                
+                tablaAltas.setItems(oblistAltas);
+                
             } catch (ConnectException ex) {
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (JDBCConnectionException ex) {
@@ -455,50 +593,6 @@ public class ProductosController implements Initializable {
             } catch (ExceptionInInitializerError ex) {
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }else{
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Debe de seleccionar un campo");
-            alert.show();
-        }
-    }
-    
-    @FXML private void EditarAlta(ActionEvent event){
-        Altas alta = tablaAltas.getSelectionModel().getSelectedItem();
-        if(alta !=null ){ 
-            try{
-
-                if(!txtCantidadAlta.getText().equals("")){
-                    alta.setCantidad(Double.parseDouble(txtCantidadAlta.getText()));
-                }
-                
-                if(!txtPrecioAlta.getText().equals("")){
-                    alta.setPrecioVenta(Double.parseDouble(txtPrecioAlta.getText()));
-                }
-                
-                alta.setUnidad((UnidadMedida) boxUnidadAlta.getValue());
-
-                alta.setProducto((Producto) boxProductoAlta.getValue());
-
-                daoA.updateAltas(alta);
-                obtenerAltas();
-            }catch(NumberFormatException ex){
-                System.out.println(ex.getMessage()+" No es un numero");
-            }catch (ConnectException ex) {
-                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (JDBCConnectionException ex) {
-                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (CommunicationsException ex) {
-                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InvocationTargetException ex) {
-                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ExceptionInInitializerError ex) {
-                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }else{
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Debe de seleccionar un campo");
-            alert.show();
-        }
     }
     
     @FXML private void openSerialConfig()
@@ -515,32 +609,69 @@ public class ProductosController implements Initializable {
     }
     
     
-    @FXML private void agregarBaja(ActionEvent event){
-        Bajas baja = new Bajas();
+    @FXML private void seleccionarBaja(MouseEvent event) throws IOException{
+        Bajas baja = tablaBajas.getSelectionModel().getSelectedItem();
+        
+        if (event.getClickCount() == 2 && baja != null){
             
-        try{
-            baja.setCantidad(Double.parseDouble(txtCantidadBaja.getText()));
-            baja.setFecha(new Date());
-            baja.setPrecioVenta(Double.parseDouble(txtPrecioBaja.getText()));
-            baja.setUnidad((UnidadMedida) boxUnidadBaja.getValue());
-            
-            baja.setProducto((Producto) boxProductoBaja.getValue());
-            
-            daoB.agregarBajas(baja);
-            obtenerBajas();
-        }catch(NumberFormatException ex){
-            System.out.println(ex.getMessage()+" No es un numero");
-        }catch (ConnectException ex) {
-            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JDBCConnectionException ex) {
-            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (CommunicationsException ex) {
-            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvocationTargetException ex) {
-            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ExceptionInInitializerError ex) {
-            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            BorderPane pane;
+            LOG.info("cargando vista editar stock baja");
+
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Stock.fxml"));
+
+            pane = loader.load();
+
+            StockController controller = loader.getController();
+            controller.habilitarCampos(true, false);
+            controller.cargarDatos(baja.getProducto(), baja.getCantidad(), baja.getUnidad(), baja.getPrecioVenta());
+            controller.setIdentificador(baja.getId());
+            rootPane.getChildren().setAll(pane);
+           
         }
+    }
+    
+    @FXML private void agregarBaja(ActionEvent event) throws IOException{
+        BorderPane pane;
+        LOG.info("cargando vista stock baja");
+        
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Stock.fxml"));
+        
+        pane = loader.load();
+        
+        StockController controller = loader.getController();
+        controller.habilitarCampos(false, false);
+        
+        rootPane.getChildren().setAll(pane);
+        
+        
+//        Bajas baja = new Bajas();
+//            
+//        try{
+//            baja.setCantidad(Double.parseDouble(txtCantidadBaja.getText()));
+//            baja.setFecha(new Date());
+//            baja.setPrecioVenta(Double.parseDouble(txtPrecioBaja.getText()));
+//            baja.setUnidad((UnidadMedida) boxUnidadBaja.getValue());
+//            
+//            baja.setProducto((Producto) boxProductoBaja.getValue());
+//            
+//            daoB.agregarBajas(baja);
+//            System.out.println(boxCliente.getSelectionModel().getSelectedItem().getCorreo());
+//            obtenerBajas();
+//        }catch(NumberFormatException ex){
+//            System.out.println(ex.getMessage()+" No es un numero");
+//        }
+//        }catch (ConnectException ex) {
+//            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (JDBCConnectionException ex) {
+//            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (CommunicationsException ex) {
+//            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (InvocationTargetException ex) {
+//            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (ExceptionInInitializerError ex) {
+//            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
     
     @FXML private void EliminarBaja(ActionEvent event){
@@ -568,28 +699,75 @@ public class ProductosController implements Initializable {
         }
     }
     
-    @FXML private void EditarBaja(ActionEvent event){
-        Bajas baja = tablaBajas.getSelectionModel().getSelectedItem();
-        if(baja !=null ){ 
-            try{
-
-                if(!txtCantidadBaja.getText().equals("")){
-                    baja.setCantidad(Double.parseDouble(txtCantidadBaja.getText()));
+   @FXML private void EditarBaja(ActionEvent event){
+//        Bajas baja = tablaBajas.getSelectionModel().getSelectedItem();
+//        if(baja !=null ){ 
+//            try{
+//
+//                if(!txtCantidadBaja.getText().equals("")){
+//                    baja.setCantidad(Double.parseDouble(txtCantidadBaja.getText()));
+//                }
+//                
+//                if(!txtPrecioBaja.getText().equals("")){
+//                    baja.setPrecioVenta(Double.parseDouble(txtPrecioBaja.getText()));
+//                }
+//                
+//                baja.setUnidad((UnidadMedida) boxUnidadBaja.getValue());
+//
+//                baja.setProducto((Producto) boxProductoBaja.getValue());
+//
+//                daoB.updateBajas(baja);
+//                obtenerBajas();
+//            }catch(NumberFormatException ex){
+//                System.out.println(ex.getMessage()+" No es un numero");
+//            }catch (ConnectException ex) {
+//                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+//            } catch (JDBCConnectionException ex) {
+//                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+//            } catch (CommunicationsException ex) {
+//                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+//            } catch (InvocationTargetException ex) {
+//                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+//            } catch (ExceptionInInitializerError ex) {
+//                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        }else{
+//            Alert alert = new Alert(Alert.AlertType.ERROR);
+//            alert.setHeaderText("Debe de seleccionar un campo");
+//            alert.show();
+//        }
+    }
+   
+   @FXML private void buscarBaja(ActionEvent event){
+            try {
+                tablaBajas.getItems().clear();
+                Date fechaInicio = null, fechaFin = null;
+                
+                if(fechaFinBaja.getValue() == null){
+                    fechaFin = new Date();
+                }else{
+                    fechaFin = Date.from(fechaFinBaja.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+                    fechaFin.setHours(23);
+                    fechaFin.setMinutes(59);
+                    fechaFin.setSeconds(59);
                 }
                 
-                if(!txtPrecioBaja.getText().equals("")){
-                    baja.setPrecioVenta(Double.parseDouble(txtPrecioBaja.getText()));
+                if(boxProductoBaja.getValue() != null && fechaInicioBaja.getValue() != null){
+                    fechaInicio = Date.from(fechaInicioBaja.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+                    oblistBajas.setAll(daoB.findBajaWhithProductoAndFecha(boxProductoBaja.getValue(), fechaInicio, fechaFin));
+                    
+                    
+                }else if (boxProductoBaja.getValue() != null){
+                    oblistBajas.setAll(daoB.findBajaWhithProducto(boxProductoBaja.getValue()));
+                    
+                }else if (fechaInicioBaja.getValue() != null){
+                    fechaInicio = Date.from(fechaInicioBaja.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+                    oblistBajas.setAll(daoB.findBajaWhithFecha(fechaInicio, fechaFin));
                 }
                 
-                baja.setUnidad((UnidadMedida) boxUnidadBaja.getValue());
-
-                baja.setProducto((Producto) boxProductoBaja.getValue());
-
-                daoB.updateBajas(baja);
-                obtenerBajas();
-            }catch(NumberFormatException ex){
-                System.out.println(ex.getMessage()+" No es un numero");
-            }catch (ConnectException ex) {
+                tablaBajas.setItems(oblistBajas);
+                
+            } catch (ConnectException ex) {
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (JDBCConnectionException ex) {
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
@@ -600,11 +778,6 @@ public class ProductosController implements Initializable {
             } catch (ExceptionInInitializerError ex) {
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }else{
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Debe de seleccionar un campo");
-            alert.show();
-        }
     }
     
     @FXML private void agregarCliente(ActionEvent event) throws IOException{

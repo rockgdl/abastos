@@ -43,10 +43,9 @@
                                  <columns>
                                     <TableColumn fx:id="columnId" prefWidth="75.0" text="id" />
                                     <TableColumn fx:id="columnNombre" prefWidth="149.0" text="nombre" />
-                                    <TableColumn fx:id="columnCantidad" prefWidth="107.0" text="cantidad" />
+                                    <TableColumn fx:id="columnStock" prefWidth="107.0" text="Stock" />
                                     <TableColumn fx:id="columnDescripcion" prefWidth="147.0" text="descripcion" />
                                     <TableColumn fx:id="columnFecha" prefWidth="150.0" text="Fecha de alta" />
-                                    <TableColumn fx:id="columnCostoUnit" prefWidth="110.0" text="costo unitario" />
                                     <TableColumn fx:id="columnCostoTotal" prefWidth="115.0" text="costo Total" />
                                  </columns>
                               </TableView>
@@ -58,27 +57,22 @@
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <TableView fx:id="tablaAltas" layoutX="356.0" layoutY="68.0" onMouseClicked="#seleccionarAlta" prefHeight="365.0" prefWidth="696.0">
+                              <TableView fx:id="tablaAltas" layoutX="104.0" layoutY="123.0" onMouseClicked="#seleccionarAlta" prefHeight="365.0" prefWidth="909.0">
                                 <columns>
                                   <TableColumn fx:id="columnIdAltas" prefWidth="75.0" text="ID" />
-                                  <TableColumn fx:id="columnProductoAltas" prefWidth="149.0" text="Producto" />
-                                    <TableColumn fx:id="columnCantidadAltas" prefWidth="99.0" text="Cantidad" />
-                                    <TableColumn fx:id="columnUnidadAltas" prefWidth="75.0" text="Unidad" />
-                                    <TableColumn fx:id="columnPrecioAltas" prefWidth="144.0" text="Precio" />
-                                    <TableColumn fx:id="columnFechaAltas" prefWidth="153.0" text="Fecha" />
+                                  <TableColumn fx:id="columnProductoAltas" prefWidth="220.0" text="Producto" />
+                                    <TableColumn fx:id="columnCantidadAltas" prefWidth="82.0" text="Cantidad" />
+                                    <TableColumn fx:id="columnUnidadAltas" prefWidth="123.0" text="Unidad" />
+                                    <TableColumn fx:id="columnPrecioAltas" prefWidth="158.0" text="Precio" />
+                                    <TableColumn fx:id="columnFechaAltas" prefWidth="250.0" text="Fecha" />
                                 </columns>
                               </TableView>
-                              <Button layoutX="1078.0" layoutY="96.0" mnemonicParsing="false" onAction="#EliminarAlta" text="Eliminar" />
-                              <Button layoutX="260.0" layoutY="339.0" mnemonicParsing="false" onAction="#EditarAlta" prefHeight="31.0" prefWidth="71.0" text="Editar" />
-                              <Label layoutX="18.0" layoutY="101.0" text="Producto:" />
-                              <ComboBox fx:id="boxProductoAlta" layoutX="111.0" layoutY="96.0" prefHeight="31.0" prefWidth="226.0" />
-                              <TextField fx:id="txtCantidadAlta" layoutX="111.0" layoutY="153.0" prefHeight="31.0" prefWidth="223.0" />
-                              <ComboBox fx:id="boxUnidadAlta" layoutX="111.0" layoutY="212.0" prefHeight="31.0" prefWidth="223.0" />
-                              <TextField fx:id="txtPrecioAlta" layoutX="111.0" layoutY="275.0" prefHeight="31.0" prefWidth="223.0" />
-                              <Label layoutX="20.0" layoutY="158.0" text="Cantidad" />
-                              <Label layoutX="26.0" layoutY="217.0" text="Unidad" />
-                              <Label layoutX="30.0" layoutY="280.0" text="Precio" />
-                              <Button layoutX="111.0" layoutY="339.0" mnemonicParsing="false" onAction="#agregarAlta" text="Agregar" />
+                              <Button layoutX="1082.0" layoutY="151.0" mnemonicParsing="false" onAction="#EliminarAlta" text="Eliminar" />
+                              <Button layoutX="1082.0" layoutY="213.0" mnemonicParsing="false" onAction="#agregarAlta" text="Agregar" />
+                              <DatePicker fx:id="fechaInicioAlta" layoutX="531.0" layoutY="34.0" />
+                              <DatePicker fx:id="fechaFinAlta" layoutX="531.0" layoutY="72.0" />
+                              <ComboBox fx:id="boxProductoAlta" layoutX="212.0" layoutY="57.0" prefHeight="31.0" prefWidth="273.0" />
+                              <Button layoutX="844.0" layoutY="57.0" mnemonicParsing="false" onAction="#buscarAlta" text="Buscar" />
                            </children></AnchorPane>
                   </content>
                 </Tab>
@@ -86,28 +80,23 @@
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <TableView fx:id="tablaBajas" layoutX="356.0" layoutY="68.0" prefHeight="365.0" prefWidth="696.0">
+                              <TableView fx:id="tablaBajas" layoutX="104.0" layoutY="123.0" onMouseClicked="#seleccionarBaja" prefHeight="365.0" prefWidth="909.0">
                                  <columns>
                                     <TableColumn fx:id="columnIdBajas" prefWidth="75.0" text="ID" />
-                                    <TableColumn fx:id="columnProductoBajas" prefWidth="149.0" text="Producto" />
-                                    <TableColumn fx:id="columnCantidadBajas" prefWidth="99.0" text="Cantidad" />
-                                    <TableColumn fx:id="columnUnidadBajas" prefWidth="75.0" text="Unidad" />
-                                    <TableColumn fx:id="columnPrecioBajas" prefWidth="144.0" text="Precio" />
-                                    <TableColumn fx:id="columnFechaBajas" prefWidth="153.0" text="Fecha" />
+                                    <TableColumn fx:id="columnProductoBajas" prefWidth="220.0" text="Producto" />
+                                    <TableColumn fx:id="columnCantidadBajas" prefWidth="82.0" text="Cantidad" />
+                                    <TableColumn fx:id="columnUnidadBajas" prefWidth="123.0" text="Unidad" />
+                                    <TableColumn fx:id="columnPrecioBajas" prefWidth="158.0" text="Precio" />
+                                    <TableColumn fx:id="columnFechaBajas" prefWidth="250.0" text="Fecha" />
                                  </columns>
                               </TableView>
-                              <Button layoutX="111.0" layoutY="340.0" mnemonicParsing="false" onAction="#agregarBaja" text="Agregar" />
-                              <TextField fx:id="txtCantidadBaja" layoutX="111.0" layoutY="153.0" prefHeight="31.0" prefWidth="223.0" />
-                              <ComboBox fx:id="boxProductoBaja" layoutX="111.0" layoutY="96.0" prefHeight="31.0" prefWidth="223.0" />
-                              <TextField fx:id="txtPrecioBaja" layoutX="111.0" layoutY="275.0" prefHeight="31.0" prefWidth="223.0" />
-                              <ComboBox fx:id="boxUnidadBaja" layoutX="111.0" layoutY="212.0" prefHeight="31.0" prefWidth="221.0" />
-                              <Label layoutX="28.0" layoutY="280.0" text="Precio" />
-                              <Label layoutX="25.0" layoutY="217.0" text="Unidad" />
-                              <Label layoutX="19.0" layoutY="158.0" text="Cantidad" />
-                              <Label layoutX="17.0" layoutY="101.0" text="Producto:" />
-                              <Button layoutX="263.0" layoutY="340.0" mnemonicParsing="false" onAction="#EditarBaja" prefHeight="31.0" prefWidth="71.0" text="Editar" />
-                              <Button layoutX="1077.0" layoutY="96.0" mnemonicParsing="false" onAction="#EliminarBaja" text="Eliminar" />
-                              <Button layoutX="1081.0" layoutY="164.0" mnemonicParsing="false" onAction="#agregarCliente" text="Clientes" />
+                              <Button layoutX="1078.0" layoutY="146.0" mnemonicParsing="false" onAction="#EliminarBaja" text="Eliminar" />
+                              <Button layoutX="1078.0" layoutY="290.0" mnemonicParsing="false" onAction="#agregarCliente" text="Clientes" />
+                              <Button layoutX="1082.0" layoutY="200.0" mnemonicParsing="false" onAction="#agregarBaja" text="Agregar" />
+                              <Button layoutX="844.0" layoutY="57.0" mnemonicParsing="false" onAction="#buscarBaja" text="Buscar" />
+                              <ComboBox fx:id="boxProductoBaja" layoutX="212.0" layoutY="57.0" prefHeight="31.0" prefWidth="273.0" />
+                              <DatePicker fx:id="fechaFinBaja" layoutX="531.0" layoutY="72.0" />
+                              <DatePicker fx:id="fechaInicioBaja" layoutX="531.0" layoutY="34.0" />
                            </children></AnchorPane>
                     </content>
                   </Tab>
