@@ -18,12 +18,15 @@ import com.fpicneo.abastos.dao.BajasDao;
 import com.fpicneo.abastos.dao.ClienteDao;
 import com.fpicneo.abastos.dao.ProductoDao;
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.ConnectException;
 import java.net.URL;
 import java.util.Date;
 import java.util.ResourceBundle;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.ObservableList;
@@ -33,9 +36,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import jssc.SerialPortException;
 import org.hibernate.exception.JDBCConnectionException;
 
 /**
@@ -47,10 +52,15 @@ public class StockController implements Initializable {
     
     private Logger LOG=Logger.getLogger(this.getClass().getSimpleName());
     
+    private static DataOutputStream os = null;
+	private static DataInputStream is = null;
+        private static String responseLine;
+        private static StringTokenizer tokens=null;
+    
     @FXML private BorderPane borderPane;
     
 
-    @FXML ComboBox<Producto> boxProducto;
+    @FXML Label lblProducto;
     @FXML ComboBox<UnidadMedida> boxUnidad;
     @FXML TextField txtCantidad, txtPrecio;
     @FXML ComboBox boxCliente;
@@ -66,6 +76,8 @@ public class StockController implements Initializable {
     private Boolean isEditable;
     
     private Integer identificador;
+    private Double CantidadTemporal;
+    private Producto productoSeleccionado;
     /**
      * Initializes the controller class.
      */
@@ -78,7 +90,6 @@ public class StockController implements Initializable {
         
         try {
             boxUnidad.getItems().addAll(UnidadMedida.values());
-            boxProducto.getItems().addAll(daoP.obtenerTodos());
             boxCliente.getItems().setAll(daoC.read());
             
         } catch (ConnectException ex) {
@@ -102,7 +113,6 @@ public class StockController implements Initializable {
                 Altas alta= new Altas();
                 alta.setCantidad(Double.parseDouble(txtCantidad.getText()));
                 alta.setFecha(new Date());
-                alta.setProducto(boxProducto.getValue());
                 alta.setPrecioVenta(Double.parseDouble(txtPrecio.getText()));
                 alta.setUnidad(boxUnidad.getValue());
                 
@@ -118,7 +128,6 @@ public class StockController implements Initializable {
                 Bajas baja = new Bajas();
                 baja.setCantidad(Double.parseDouble(txtCantidad.getText()));
                 baja.setFecha(new Date());
-                baja.setProducto(boxProducto.getValue());
                 baja.setPrecioVenta(Double.parseDouble(txtPrecio.getText()));
                 baja.setUnidad(boxUnidad.getValue());
                 
@@ -150,27 +159,36 @@ public class StockController implements Initializable {
     }
     
     @FXML private void editar(ActionEvent event) throws IOException{
+        
+        Double valorCapturado = Double.parseDouble(txtCantidad.getText());
+        Double diferencia = valorCapturado - this.CantidadTemporal;
         try { 
             if(getIsAlta()){
                 Altas alta= new Altas();
-                alta.setCantidad(Double.parseDouble(txtCantidad.getText()));
+                alta.setCantidad(valorCapturado);
                 alta.setFecha(new Date());
-                alta.setProducto(boxProducto.getValue());
                 alta.setPrecioVenta(Double.parseDouble(txtPrecio.getText()));
                 alta.setUnidad(boxUnidad.getValue());
                 alta.setId(getIdentificador());
+                
                 daoA.updateAltas(alta);
+                
+                this.productoSeleccionado.setStock(this.productoSeleccionado.getStock()+diferencia.intValue());
+                
             }else{
                 Bajas baja = new Bajas();
-                baja.setCantidad(Double.parseDouble(txtCantidad.getText()));
+                baja.setCantidad(valorCapturado);
                 baja.setFecha(new Date());
-                baja.setProducto(boxProducto.getValue());
                 baja.setPrecioVenta(Double.parseDouble(txtPrecio.getText()));
                 baja.setUnidad(boxUnidad.getValue());
                 baja.setId(getIdentificador());
                 
                 daoB.updateBajas(baja);
+                
+                this.productoSeleccionado.setStock(this.productoSeleccionado.getStock()-diferencia.intValue());
             }
+            
+            daoP.updateProducto(this.productoSeleccionado);
         } catch (ConnectException ex) {
             Logger.getLogger(StockController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (JDBCConnectionException ex) {
@@ -189,6 +207,33 @@ public class StockController implements Initializable {
         LOG.info("REGRESANDO A LA VISTA DE TODOS LOS PRODUCTOS UNA VEZ GUARDADO EL PRODUCTO ");
         pane= FXMLLoader.load(getClass().getResource("/fxml/Productos.fxml"));
         borderPane.getChildren().setAll(pane);
+    }
+    
+    
+    @FXML private void obtenerPeso(ActionEvent event){
+        jssc.SerialPort serialPort = new jssc.SerialPort("COM3");
+    try {
+        serialPort.openPort();//Open serial port
+        serialPort.setParams(jssc.SerialPort.BAUDRATE_9600, 
+                             jssc.SerialPort.DATABITS_8,
+                             jssc.SerialPort.STOPBITS_1,
+                             jssc.SerialPort.PARITY_NONE);//Set params. Also you can set params by this string: serialPort.setParams(9600, 8, 1, 0);
+        serialPort.writeBytes("P".getBytes());//Write data to port
+       
+        
+        serialPort.setParams(9600, 8, 1, 0);//Set params.
+        byte[] buffer = serialPort.readBytes(10);//Read 10 bytes from serial port
+        String s = new String(buffer);
+        
+        System.out.println("tengo esto en linea "+s);
+        txtCantidad.setText(s);
+        
+        serialPort.closePort();//Close serial port
+    }
+    catch (SerialPortException ex) {
+        
+        System.out.println(ex);
+    }
     }
    
     public Boolean getIsAlta() {
@@ -217,10 +262,13 @@ public class StockController implements Initializable {
     }
     
     public void cargarDatos(Producto producto, Double cantidad, UnidadMedida unidad, Double precio){
-        boxProducto.setValue(producto);
+        lblProducto.setText(producto.getNombre());
+        this.productoSeleccionado = producto;
         txtCantidad.setText(cantidad.toString());
         boxUnidad.setValue(unidad);
         txtPrecio.setText(precio.toString());
+        
+        this.CantidadTemporal = cantidad;
     }
 
     

@@ -616,8 +616,6 @@ public class ProductosController implements Initializable {
             
             BorderPane pane;
             LOG.info("cargando vista editar stock baja");
-
-
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Stock.fxml"));
 
             pane = loader.load();
