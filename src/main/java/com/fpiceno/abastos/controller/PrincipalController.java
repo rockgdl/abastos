@@ -88,7 +88,7 @@ public class PrincipalController implements Initializable {
                     
                     LOG.info("el boton es para inicializar un update al producto ");
                     getProducto().setCostoTotal(Double.parseDouble(pesoField.getText()));
-                    getProducto().setCostoUnitario(Double.parseDouble(costoUnitField.getText()));
+          //          getProducto().setCostoUnitario(Double.parseDouble(costoUnitField.getText()));
                     getProducto().setDescripcion(descripcionField.getText());
                     getProducto().setNombre(conceptoField.getText());
                     getProducto().setUnidad((UnidadMedida)comboUnidadMedida.getValue());
@@ -96,8 +96,8 @@ public class PrincipalController implements Initializable {
                 }else{
                     LOG.info("SE INICIALIZA UN NUEVO PRODUCTO PONIENDO UN STOCK EN 0");
                     Producto newProducto= new Producto();
-                    newProducto.setCostoTotal(Double.parseDouble(pesoField.getText()));
-                    newProducto.setCostoUnitario(Double.parseDouble(costoUnitField.getText()));
+                    //newProducto.setCostoTotal(Double.parseDouble(pesoField.getText()));
+            //        newProducto.setCostoUnitario(Double.parseDouble(costoUnitField.getText()));
                     newProducto.setDescripcion(descripcionField.getText());
                     newProducto.setFechaAlta(new Date());
                     newProducto.setNombre(conceptoField.getText());
@@ -173,7 +173,7 @@ public class PrincipalController implements Initializable {
         
         LOG.info("cargando los datos para el producto creo uqe para el update ");
         conceptoField.setText(producto.getNombre());
-        costoUnitField.setText(producto.getCostoUnitario().toString());
+        //costoUnitField.setText(producto.getCostoUnitario().toString());
         pesoField.setText(producto.getCostoTotal().toString());
         descripcionField.setText(producto.getDescripcion());
         comboUnidadMedida.setValue(producto.getUnidad());

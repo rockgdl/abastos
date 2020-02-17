@@ -33,18 +33,16 @@ public class Producto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name="nombre")
+    @Column(name="nombre", unique = true)
     private String nombre;
     @Column(name="descripcion")
     private String descripcion;
-    @Column(name="cantidad")
-    private Integer cantidad;
+  
     @Column(name="fechaAlta")
     private Date fechaAlta;
     @Enumerated(EnumType.STRING)
     private UnidadMedida unidad;
-    @Column(name="costoUnitario")
-    private Double costoUnitario;
+    
     @Column(name="costoTotal")
     private Double costoTotal;
     
@@ -97,28 +95,12 @@ public class Producto {
         this.unidad = unidad;
     }
 
-    public Double getCostoUnitario() {
-        return costoUnitario;
-    }
-
-    public void setCostoUnitario(Double costoUnitario) {
-        this.costoUnitario = costoUnitario;
-    }
-
     public Double getCostoTotal() {
         return costoTotal;
     }
 
     public void setCostoTotal(Double costoTotal) {
         this.costoTotal = costoTotal;
-    }
-
-    public Integer getCantidad() {
-        return cantidad;
-    }
-
-    public void setCantidad(Integer cantidad) {
-        this.cantidad = cantidad;
     }
 
     @Override
