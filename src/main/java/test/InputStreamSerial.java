@@ -14,6 +14,7 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jssc.SerialPortException;
+import jssc.SerialPortList;
 
 /**
  *
@@ -30,6 +31,11 @@ public class InputStreamSerial {
         private static StringTokenizer tokens=null;
     
     public static void main(String[] args) {
+        
+        String[] portNames = SerialPortList.getPortNames();
+    for(int i = 0; i < portNames.length; i++){
+        System.out.println(portNames[i]);
+    }
       jssc.SerialPort serialPort = new jssc.SerialPort("COM3");
     try {
         serialPort.openPort();//Open serial port
