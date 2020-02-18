@@ -28,12 +28,15 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import org.hibernate.exception.JDBCConnectionException;
 import test.InputStreamSerial;
 
@@ -48,8 +51,8 @@ public class PrincipalController implements Initializable {
      * Initializes the controller class.
      */
     
-        private Logger LOG=Logger.getLogger(this.getClass().getSimpleName());
-       private static DataOutputStream os = null;
+        private final org.apache.log4j.Logger LOG= org.apache.log4j.Logger.getLogger(PrincipalController.class.getSimpleName());
+        private static DataOutputStream os = null;
 	private static DataInputStream is = null;
         private static String responseLine;
         private static StringTokenizer tokens=null;
@@ -161,7 +164,14 @@ public class PrincipalController implements Initializable {
         FlowPane pane;
         LOG.info("REGRESANDO A LA VISTA DE TODOS LOS PRODUCTOS UNA VEZ GUARDADO EL PRODUCTO ");
         pane= FXMLLoader.load(getClass().getResource("/fxml/Productos.fxml"));
-        borderPane.getChildren().setAll(pane);
+       // borderPane.getChildren().setAll(pane);
+        
+          Scene scene = new Scene(pane);
+                 Stage stage = null;
+                     stage= new Stage();
+                     stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setScene(scene);
+                stage.show();
         LOG.info(conceptoField.getText());
     }
     
@@ -183,84 +193,7 @@ public class PrincipalController implements Initializable {
     }
 
     
-    @FXML private void obtenerPeso()
-    {
-        LOG.info("INTENTANDO COMUNICAR AL PUERTO SERIAL SELECCIONADO");
-        
-           System.out.println("\nUsing Library Version v" + SerialPort.getVersion());
-		SerialPort[] ports = SerialPort.getCommPorts();
-		System.out.println("\nAvailable Ports:\n");
-		for (int i = 0; i < ports.length; ++i)
-                {
-                    System.out.println("   [" + i + "] " + ports[i].getSystemPortName() + ": " + ports[i].getDescriptivePortName() + " - " + ports[i].getPortDescription());
-                }
-		
-		System.out.print("\nChoose your desired serial port or enter -1 to specify a port directly: ");
-		int serialPortChoice = 0;
-		try {
-			Scanner inputScanner = new Scanner(System.in);
-			serialPortChoice = inputScanner.nextInt();
-			inputScanner.close();
-		} catch (Exception e) {}
-
-                    
-
-                
-                SerialPort comPort = ports[serialPortChoice];
-//    SerialPort comPort = SerialPort.getCommPorts()[2];
-        comPort.openPort();
-        comPort.setComPortTimeouts(SerialPort.TIMEOUT_NONBLOCKING, 1000, 0);
-        
-         os = new DataOutputStream(comPort.getOutputStream());
-        is = new DataInputStream(comPort.getInputStream());
-        
-        
-          if (os != null && is != null) 
-        {
-            
-        try {
-            
-            System.out.println(" pude obtener los inputStrem  y los OutputStream "+is.readLine());
-            try {
-                //  os.write("\nP\r".getBytes());
-                
-                System.out.println("que tengo en el is "+is.available());
-                System.out.println(is.readLine());
-//               while ((responseLine = is.readLine()) != null)
-//                {
-//                     System.out.println(responseLine);
-////                       tokens=new StringTokenizer(responseLine);
-////                      while(tokens.hasMoreTokens()){
-////                          
-////                      }
-////                      
-////                        os.writeUTF("\nP\r");
-//                }
-                
-                
-                
-                
-                
-                
-            } catch (IOException ex) {
-                Logger.getLogger(InputStreamSerial.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        //   comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0);
-//        InputStream in = comPort.getInputStream();
-//        try
-//        {
-//           for (int j = 0; j < 1000; ++j)
-//              System.out.print((char)in.read());
-//           in.close();
-//        } catch (Exception e) { e.printStackTrace(); }
-//             comPort.closePort();
- catch (IOException ex) {
-            Logger.getLogger(InputStreamSerial.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        }
-
-    }
+   
     /**
      * @return the producto
      */

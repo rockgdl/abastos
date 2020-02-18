@@ -25,6 +25,9 @@ import org.hibernate.Transaction;
  * @author fpiceno
  */
 public class ProductoDaoMysql implements ProductoDao{
+                   private final org.apache.log4j.Logger LOG= org.apache.log4j.Logger.getLogger(ProductoDaoMysql.class.getSimpleName());
+
+
 
     @Override
     public void agregarProducto(Producto producto) {
@@ -53,8 +56,8 @@ public class ProductoDaoMysql implements ProductoDao{
        Transaction tx = session.beginTransaction();
         session.delete(producto);
 
-        session.flush();
-        session.getTransaction().commit();
+   
+        //session.getTransaction().commit();
        
         tx.commit();
 
@@ -78,7 +81,7 @@ public class ProductoDaoMysql implements ProductoDao{
         if (HibernateUtil.getSessionFactory()!=null &&  HibernateUtil.getSessionFactory().getCurrentSession().isOpen())
 
         {
-            System.out.println("hay una session activa");
+            LOG.debug("hay una session activa");
                 return HibernateUtil.getSessionFactory().getCurrentSession();
         }
     

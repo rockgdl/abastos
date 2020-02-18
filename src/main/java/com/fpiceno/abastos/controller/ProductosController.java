@@ -52,6 +52,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.hibernate.SessionException;
 import org.hibernate.exception.ConstraintViolationException;
@@ -161,9 +162,19 @@ public class ProductosController implements Initializable {
      @FXML private void agregarProducto()throws IOException
      {
         BorderPane pane;
-        LOG.info("cargando vista Administrador");
+        LOG.info("cargando vista de Agregar Producto");
         pane= FXMLLoader.load(getClass().getResource("/fxml/Principal.fxml"));
-        rootPane.getChildren().setAll(pane);
+      //  rootPane.getChildren().setAll(pane);
+          Scene scene = new Scene(pane);
+                 Stage stage = null;
+                     stage= new Stage();
+                     stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setScene(scene);
+                stage.show();
+        
+        
+        
+        
      }
     
        public void obtenerProductos(){
@@ -327,7 +338,13 @@ public class ProductosController implements Initializable {
                 pane= load.load();
                 PrincipalController controlador = load.getController();
                 controlador.cargarDatos(producto);
-                rootPane.getChildren().setAll(pane);
+               // rootPane.getChildren().setAll(pane);
+                  Scene scene = new Scene(pane);
+                 Stage stage = null;
+                     stage= new Stage();
+                     stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setScene(scene);
+                stage.show();
             }
        }
        
@@ -385,6 +402,23 @@ public class ProductosController implements Initializable {
             } catch (SQLException ex) {
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             }
+            
+            
+               tablaAltas.getItems().clear();
+                
+            try {
+                oblistAltas.addAll(daoA.obtenerTodos());
+            } catch (ConnectException ex) {
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (JDBCConnectionException ex) {
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (CommunicationsException ex) {
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvocationTargetException ex) {
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ExceptionInInitializerError ex) {
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            }
        }
     
     @FXML private void seleccionarAlta(MouseEvent event) throws IOException{
@@ -404,8 +438,13 @@ public class ProductosController implements Initializable {
             controller.habilitarCampos(true, true);
             controller.cargarDatos(alta.getProducto(), alta.getCantidad(), alta.getUnidad(), alta.getPrecioVenta(), alta.getPrecioTotal());
             controller.setIdentificador(alta.getId());
-            rootPane.getChildren().setAll(pane);
-            
+           // rootPane.getChildren().setAll(pane);
+              Scene scene = new Scene(pane);
+                 Stage stage = null;
+                     stage= new Stage();
+                     stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setScene(scene);
+                stage.show();
 //            boxProductoAlta.setValue(alta.getProducto());
 //            boxUnidadAlta.setValue(alta.getUnidad());
 //            txtCantidadAlta.setText(alta.getCantidad().toString());
@@ -426,7 +465,14 @@ public class ProductosController implements Initializable {
         
         
         
-        rootPane.getChildren().setAll(pane);
+       // rootPane.getChildren().setAll(pane);
+        
+         Scene scene = new Scene(pane);
+                 Stage stage = null;
+                     stage= new Stage();
+                     stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setScene(scene);
+                stage.show();
 //        Altas alta = new Altas();    
 //        try{
 //            alta.setCantidad(Double.parseDouble(txtCantidadAlta.getText()));
@@ -479,6 +525,7 @@ public class ProductosController implements Initializable {
                 Scene scene = new Scene(pane);
                  Stage stage = null;
                      stage= new Stage();
+                     stage.initModality(Modality.APPLICATION_MODAL);
                 stage.setScene(scene);
                 stage.show();
             } catch (IOException ex) {

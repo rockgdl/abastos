@@ -6,6 +6,8 @@ package com.fpiceno.abastos.controller;
  * and open the template in the editor.
  */
 import com.fazecast.jSerialComm.SerialPort;
+import com.fpiceno.abastos.dto.Baudios;
+import com.fpiceno.abastos.dto.UnidadMedida;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -43,22 +45,7 @@ public class SerialFxController implements Initializable {
     private ObservableList <ArrayList> oblistBajas= FXCollections.observableArrayList();
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-                System.out.println("\nUsing Library Version v" + SerialPort.getVersion());
-		SerialPort[] ports = SerialPort.getCommPorts();
-		System.out.println("\nAvailable Ports:\n");
-                List<SerialPort> list=Arrays.asList(ports);
-              
-                for(SerialPort c : list)
-                {
-                    
-                    LOG.info("esto tengo en serial port"+c.getSystemPortName()+c.getPortDescription() +c.getSystemPortName());
-                }
-               portList.setItems(FXCollections.observableArrayList(list));
-		for (int i = 0; i < ports.length; ++i)
-                {
-                  //  portList.setItems(FXCollections.observableArrayList());
-                    LOG.info("   [" + i + "] " + ports[i].getSystemPortName() + ": " + ports[i].getDescriptivePortName() + " - " + ports[i].getPortDescription());
-                }
+          portList.setItems(FXCollections.observableArrayList(Baudios.values()));
                 
                 
     }    
