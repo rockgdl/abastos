@@ -87,7 +87,7 @@ public class PrincipalController implements Initializable {
                 if(getProducto() != null){
                     
                     LOG.info("el boton es para inicializar un update al producto ");
-                    getProducto().setCostoTotal(Double.parseDouble(pesoField.getText()));
+                    //getProducto().setCostoTotal(Double.parseDouble(pesoField.getText()));
           //          getProducto().setCostoUnitario(Double.parseDouble(costoUnitField.getText()));
                     getProducto().setDescripcion(descripcionField.getText());
                     getProducto().setNombre(conceptoField.getText());
@@ -102,7 +102,8 @@ public class PrincipalController implements Initializable {
                     newProducto.setFechaAlta(new Date());
                     newProducto.setNombre(conceptoField.getText());
                     newProducto.setUnidad((UnidadMedida)comboUnidadMedida.getValue());
-                    newProducto.setStock(0);//es la primera vez
+                    newProducto.setStock(0.0);//es la primera vez
+                    newProducto.setCostoTotal(0.0); //igual es su primer vez
                     dao.agregarProducto(newProducto);
                 }
             } catch (ConnectException ex) {
@@ -174,7 +175,7 @@ public class PrincipalController implements Initializable {
         LOG.info("cargando los datos para el producto creo uqe para el update ");
         conceptoField.setText(producto.getNombre());
         //costoUnitField.setText(producto.getCostoUnitario().toString());
-        pesoField.setText(producto.getCostoTotal().toString());
+        //pesoField.setText(producto.getCostoTotal().toString());
         descripcionField.setText(producto.getDescripcion());
         comboUnidadMedida.setValue(producto.getUnidad());
         

@@ -15,9 +15,9 @@
             <Label layoutX="56.0" layoutY="170.0" text="Descripcion" />
             <Label layoutX="69.0" layoutY="389.0" text="Unidad de Medida" />
             <TextField fx:id="conceptoField" layoutX="163.0" layoutY="97.0" />
+            <TextArea fx:id="descripcionField" layoutX="150.0" layoutY="139.0" prefHeight="200.0" prefWidth="200.0" />
             <ComboBox fx:id="comboUnidadMedida" layoutX="226.0" layoutY="385.0" prefWidth="150.0" />
             <Button layoutX="264.0" layoutY="452.0" mnemonicParsing="false" onMouseClicked="#guardaProducto" text="Guardar" />
-            <TextArea fx:id="descripcionField" layoutX="150.0" layoutY="139.0" prefHeight="200.0" prefWidth="200.0" />
          </children>
       </AnchorPane>
    </center>

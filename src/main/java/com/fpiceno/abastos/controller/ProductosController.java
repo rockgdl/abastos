@@ -66,6 +66,7 @@ public class ProductosController implements Initializable {
     
         private final org.apache.log4j.Logger LOG= org.apache.log4j.Logger.getLogger(ProductosController.class.getSimpleName());
 
+        private ProductoDao daoP = new ProductoDaoMysql();
 
        @FXML TableView<Producto> tablaProductos;
        @FXML TableColumn <Producto, String> columnNombre, columnDescripcion, columnFecha;
@@ -79,7 +80,7 @@ public class ProductosController implements Initializable {
        
        @FXML TableView<Altas> tablaAltas;
        @FXML TableColumn <Altas, String> columnFechaAltas, columnProductoAltas, columnUnidadAltas;
-       @FXML TableColumn <Altas, Double> columnPrecioAltas;
+       @FXML TableColumn <Altas, Double> columnPrecioAltas, columnTotalAltas;
        @FXML TableColumn <Altas, Integer> columnIdAltas, columnCantidadAltas;
        private ObservableList <Altas> oblistAltas= FXCollections.observableArrayList();
        private AltasDao daoA=new AltasDaoMysql();
@@ -226,6 +227,7 @@ public class ProductosController implements Initializable {
                 columnIdAltas.setCellValueFactory(new PropertyValueFactory("id"));
                 columnPrecioAltas.setCellValueFactory(new PropertyValueFactory("precioVenta"));
                 columnProductoAltas.setCellValueFactory(new PropertyValueFactory("producto"));
+                columnTotalAltas.setCellValueFactory(new PropertyValueFactory("precioTotal"));
                 
                 tablaAltas.setItems(oblistAltas);
             }catch (ConnectException ex) {
@@ -400,7 +402,7 @@ public class ProductosController implements Initializable {
 
             StockController controller = loader.getController();
             controller.habilitarCampos(true, true);
-            controller.cargarDatos(alta.getProducto(), alta.getCantidad(), alta.getUnidad(), alta.getPrecioVenta());
+            controller.cargarDatos(alta.getProducto(), alta.getCantidad(), alta.getUnidad(), alta.getPrecioVenta(), alta.getPrecioTotal());
             controller.setIdentificador(alta.getId());
             rootPane.getChildren().setAll(pane);
             
@@ -489,6 +491,11 @@ public class ProductosController implements Initializable {
         
         if(alta != null){
             try {
+                Double precioTotalProducto = alta.getProducto().getCostoTotal() - alta.getPrecioTotal();
+                alta.getProducto().setStock(alta.getProducto().getStock() - alta.getCantidad());
+                alta.getProducto().setCostoTotal(precioTotalProducto);
+                
+                daoP.updateProducto(alta.getProducto());
                 daoA.eliminarAltas(alta);
                 
             } catch (ConnectException ex) {
@@ -506,6 +513,7 @@ public class ProductosController implements Initializable {
             }
             
             obtenerAltas();
+            obtenerProductos();
         }else{
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Debe de seleccionar un campo");
@@ -622,7 +630,7 @@ public class ProductosController implements Initializable {
 
             StockController controller = loader.getController();
             controller.habilitarCampos(true, false);
-            controller.cargarDatos(baja.getProducto(), baja.getCantidad(), baja.getUnidad(), baja.getPrecioVenta());
+            controller.cargarDatos(baja.getProducto(), baja.getCantidad(), baja.getUnidad(), baja.getPrecioVenta(), 0.0);
             controller.setIdentificador(baja.getId());
             rootPane.getChildren().setAll(pane);
            
@@ -677,8 +685,12 @@ public class ProductosController implements Initializable {
         
         if(baja != null){
             try {
+                
+                baja.getProducto().setStock(baja.getProducto().getStock() + baja.getCantidad().intValue());
+                daoP.updateProducto(baja.getProducto());
+                
                 daoB.eliminarBajas(baja);
-                obtenerBajas();
+                
             } catch (ConnectException ex) {
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (JDBCConnectionException ex) {
@@ -689,7 +701,11 @@ public class ProductosController implements Initializable {
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ExceptionInInitializerError ex) {
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SessionException ex){
+                System.out.println("La sesion esta cerrada");
             }
+            
+            obtenerBajas();
         }else{
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Debe de seleccionar un campo");

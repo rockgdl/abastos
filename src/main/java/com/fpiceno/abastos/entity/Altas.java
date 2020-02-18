@@ -49,6 +49,9 @@ public class Altas {
     
     @Column(name = "precioVenta", nullable = false)
     private Double precioVenta;
+    
+    @Column (name = "precioTotal", nullable = true)
+    private Double precioTotal;
 
     /**
      * @return the id
@@ -132,6 +135,20 @@ public class Altas {
      */
     public void setPrecioVenta(Double precioVenta) {
         this.precioVenta = precioVenta;
+    }
+
+    /**
+     * @return the precioTotal
+     */
+    public Double getPrecioTotal() {
+        return precioTotal;
+    }
+
+    /**
+     * @param precioTotal the precioTotal to set
+     */
+    public void setPrecioTotal(Double precioTotal) {
+        this.precioTotal = precioTotal;
     }
     
 }
