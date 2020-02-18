@@ -44,9 +44,9 @@
                                     <TableColumn fx:id="columnId" prefWidth="75.0" text="id" />
                                     <TableColumn fx:id="columnNombre" prefWidth="149.0" text="nombre" />
                                     <TableColumn fx:id="columnStock" prefWidth="107.0" text="Stock" />
-                                    <TableColumn fx:id="columnDescripcion" prefWidth="147.0" text="descripcion" />
-                                    <TableColumn fx:id="columnFecha" prefWidth="150.0" text="Fecha de alta" />
-                                    <TableColumn fx:id="columnCostoTotal" prefWidth="115.0" text="costo Total" />
+                                    <TableColumn fx:id="columnDescripcion" prefWidth="219.0" text="descripcion" />
+                                    <TableColumn fx:id="columnFecha" prefWidth="174.0" text="Fecha de alta" />
+                                    <TableColumn fx:id="columnCostoTotal" prefWidth="129.0" text="costo Total" />
                                  </columns>
                               </TableView>
                            </children>
@@ -63,8 +63,9 @@
                                   <TableColumn fx:id="columnProductoAltas" prefWidth="220.0" text="Producto" />
                                     <TableColumn fx:id="columnCantidadAltas" prefWidth="82.0" text="Cantidad" />
                                     <TableColumn fx:id="columnUnidadAltas" prefWidth="123.0" text="Unidad" />
-                                    <TableColumn fx:id="columnPrecioAltas" prefWidth="158.0" text="Precio" />
-                                    <TableColumn fx:id="columnFechaAltas" prefWidth="250.0" text="Fecha" />
+                                    <TableColumn fx:id="columnPrecioAltas" prefWidth="113.0" text="Precio" />
+                                    <TableColumn fx:id="columnTotalAltas" prefWidth="120.0" text="Total" />
+                                    <TableColumn fx:id="columnFechaAltas" prefWidth="175.0" text="Fecha" />
                                 </columns>
                               </TableView>
                               <Button layoutX="1082.0" layoutY="151.0" mnemonicParsing="false" onAction="#EliminarAlta" text="Eliminar" />

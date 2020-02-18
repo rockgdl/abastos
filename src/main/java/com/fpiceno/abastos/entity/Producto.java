@@ -53,7 +53,7 @@ public class Producto {
     private List<Bajas> listaBajas = new ArrayList<Bajas>();
 
     @Column (name = "stock")
-    private Integer stock;
+    private Double stock;
     
     public Integer getId() {
         return id;
@@ -112,14 +112,14 @@ public class Producto {
     /**
      * @return the stock
      */
-    public Integer getStock() {
+    public Double getStock() {
         return stock;
     }
 
     /**
      * @param stock the stock to set
      */
-    public void setStock(Integer stock) {
+    public void setStock(Double stock) {
         this.stock = stock;
     }   
 

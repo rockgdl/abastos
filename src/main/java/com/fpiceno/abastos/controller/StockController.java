@@ -25,6 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.ConnectException;
 import java.net.URL;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -54,13 +55,14 @@ public class StockController implements Initializable {
     
     private static DataOutputStream os = null;
 	private static DataInputStream is = null;
-        private static String responseLine;
+     
         private static StringTokenizer tokens=null;
     
     @FXML private BorderPane borderPane;
     
 
     @FXML Label lblProducto;
+    @FXML ComboBox <Producto> boxProducto;
     @FXML ComboBox<UnidadMedida> boxUnidad;
     @FXML TextField txtCantidad, txtPrecio;
     @FXML ComboBox boxCliente;
@@ -78,6 +80,7 @@ public class StockController implements Initializable {
     private Integer identificador;
     private Double CantidadTemporal;
     private Producto productoSeleccionado;
+    private Double precioTotalAlta;
     /**
      * Initializes the controller class.
      */
@@ -90,6 +93,7 @@ public class StockController implements Initializable {
         
         try {
             boxUnidad.getItems().addAll(UnidadMedida.values());
+            boxProducto.getItems().addAll(daoP.obtenerTodos());
             boxCliente.getItems().setAll(daoC.read());
             
         } catch (ConnectException ex) {
@@ -113,28 +117,32 @@ public class StockController implements Initializable {
                 Altas alta= new Altas();
                 alta.setCantidad(Double.parseDouble(txtCantidad.getText()));
                 alta.setFecha(new Date());
+                alta.setProducto(boxProducto.getValue());
                 alta.setPrecioVenta(Double.parseDouble(txtPrecio.getText()));
                 alta.setUnidad(boxUnidad.getValue());
+                alta.setPrecioTotal(alta.getPrecioVenta() * alta.getCantidad());
                 
                 daoA.agregarAltas(alta);
                 
                 Producto producto = alta.getProducto();
                 
                 
-                producto.setStock(producto.getStock() + alta.getCantidad().intValue());
+                producto.setStock(producto.getStock() + alta.getCantidad());
+                producto.setCostoTotal(producto.getCostoTotal() + alta.getPrecioTotal());
                 daoP.updateProducto(producto);
                 
             }else{
                 Bajas baja = new Bajas();
                 baja.setCantidad(Double.parseDouble(txtCantidad.getText()));
                 baja.setFecha(new Date());
+                baja.setProducto(boxProducto.getValue());
                 baja.setPrecioVenta(Double.parseDouble(txtPrecio.getText()));
                 baja.setUnidad(boxUnidad.getValue());
                 
                 daoB.agregarBajas(baja);
                 
                 Producto producto = baja.getProducto();
-                producto.setStock(producto.getStock() - baja.getCantidad().intValue());
+                producto.setStock(producto.getStock() - baja.getCantidad());
                 daoP.updateProducto(producto);
             }
         } catch (ConnectException ex) {
@@ -159,33 +167,45 @@ public class StockController implements Initializable {
     }
     
     @FXML private void editar(ActionEvent event) throws IOException{
-        
+        //Para el caso del stock simplemente sacamos la diferencia del nuevo dato con el anterior y lo modificamos en producto
         Double valorCapturado = Double.parseDouble(txtCantidad.getText());
         Double diferencia = valorCapturado - this.CantidadTemporal;
+        
         try { 
             if(getIsAlta()){
                 Altas alta= new Altas();
+                
                 alta.setCantidad(valorCapturado);
                 alta.setFecha(new Date());
+                alta.setProducto(boxProducto.getValue());
                 alta.setPrecioVenta(Double.parseDouble(txtPrecio.getText()));
                 alta.setUnidad(boxUnidad.getValue());
+                alta.setPrecioTotal(alta.getCantidad() * alta.getPrecioVenta());
+                
                 alta.setId(getIdentificador());
                 
                 daoA.updateAltas(alta);
                 
-                this.productoSeleccionado.setStock(this.productoSeleccionado.getStock()+diferencia.intValue());
+                //Se le resta al producto el precio que tienia la alta y al final le cargamos el nuevo
+                Double costoProducto = this.productoSeleccionado.getCostoTotal() - this.precioTotalAlta;
+                this.productoSeleccionado.setCostoTotal(costoProducto + alta.getPrecioTotal());
+                
+                
+                this.productoSeleccionado.setStock(this.productoSeleccionado.getStock() + diferencia);
+                
                 
             }else{
                 Bajas baja = new Bajas();
                 baja.setCantidad(valorCapturado);
                 baja.setFecha(new Date());
+                baja.setProducto(boxProducto.getValue());
                 baja.setPrecioVenta(Double.parseDouble(txtPrecio.getText()));
                 baja.setUnidad(boxUnidad.getValue());
                 baja.setId(getIdentificador());
                 
                 daoB.updateBajas(baja);
                 
-                this.productoSeleccionado.setStock(this.productoSeleccionado.getStock()-diferencia.intValue());
+                this.productoSeleccionado.setStock(this.productoSeleccionado.getStock()-diferencia);
             }
             
             daoP.updateProducto(this.productoSeleccionado);
@@ -210,7 +230,7 @@ public class StockController implements Initializable {
     }
     
     
-    @FXML private void obtenerPeso(ActionEvent event){
+    @FXML private void obtenerPeso(ActionEvent event) throws SerialPortException{
         jssc.SerialPort serialPort = new jssc.SerialPort("COM3");
     try {
         serialPort.openPort();//Open serial port
@@ -219,21 +239,49 @@ public class StockController implements Initializable {
                              jssc.SerialPort.STOPBITS_1,
                              jssc.SerialPort.PARITY_NONE);//Set params. Also you can set params by this string: serialPort.setParams(9600, 8, 1, 0);
         serialPort.writeBytes("P".getBytes());//Write data to port
-       
+          
+          
         
         serialPort.setParams(9600, 8, 1, 0);//Set params.
         byte[] buffer = serialPort.readBytes(10);//Read 10 bytes from serial port
-        String s = new String(buffer);
+        String responseLine = new String(buffer);
         
-        System.out.println("tengo esto en linea "+s);
-        txtCantidad.setText(s);
+        LOG.info("tengo esto en linea "+responseLine);
+     
         
-        serialPort.closePort();//Close serial port
+                       
+//                                       System.out.println( Thread.currentThread() );
+                        tokens=new StringTokenizer(responseLine);
+//		                	  int nDatos=tokens.countTokens();
+
+                          while(tokens.hasMoreTokens()){
+            String gramos = tokens.nextToken();
+//		                		  String cadena = bf.readLine().replace("kg", "");
+                        String peso=tokens.nextToken().replace("kg", "");
+
+
+                         if(peso!=null && !peso.equalsIgnoreCase(""))
+                         {
+                             
+                                txtCantidad.setText(responseLine);
+                         }
+                         else
+                         {
+                             LOG.info("El peso es 0 no subire el archivo");
+                         }
+
+                          }
+        
+      
     }
     catch (SerialPortException ex) {
         
         System.out.println(ex);
     }
+        finally
+        {
+             serialPort.closePort();//Close serial port 
+        }
     }
    
     public Boolean getIsAlta() {
@@ -250,6 +298,7 @@ public class StockController implements Initializable {
         
         if(isEditable){
             btnAgregar.setDisable(true);
+            boxProducto.setDisable(true);
         }else{
             btnEditar.setDisable(true);
         }
@@ -261,12 +310,14 @@ public class StockController implements Initializable {
         }
     }
     
-    public void cargarDatos(Producto producto, Double cantidad, UnidadMedida unidad, Double precio){
+    public void cargarDatos(Producto producto, Double cantidad, UnidadMedida unidad, Double precio, Double precioTotal){
         lblProducto.setText(producto.getNombre());
+        boxProducto.setValue(producto);
         this.productoSeleccionado = producto;
         txtCantidad.setText(cantidad.toString());
         boxUnidad.setValue(unidad);
         txtPrecio.setText(precio.toString());
+        this.precioTotalAlta = precioTotal;
         
         this.CantidadTemporal = cantidad;
     }
