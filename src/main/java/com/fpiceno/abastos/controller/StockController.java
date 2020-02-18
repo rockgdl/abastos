@@ -82,6 +82,9 @@ public class StockController implements Initializable {
     private Double CantidadTemporal;
     private Producto productoSeleccionado;
     private Double precioTotalAlta;
+    
+    
+    private ProductosController controladorHijo;
     /**
      * Initializes the controller class.
      */
@@ -160,6 +163,9 @@ public class StockController implements Initializable {
             Logger.getLogger(StockController.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        getControladorHijo().obtenerAltas();
+        getControladorHijo().obtenerBajas();
+        getControladorHijo().obtenerProductos();
 //        FlowPane pane;
 //        LOG.info("REGRESANDO A LA VISTA DE TODOS LOS PRODUCTOS UNA VEZ GUARDADO EL PRODUCTO ");
 //        pane= FXMLLoader.load(getClass().getResource("/fxml/Productos.fxml"));
@@ -228,6 +234,12 @@ public class StockController implements Initializable {
             Logger.getLogger(StockController.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        getControladorHijo().obtenerAltas();
+        getControladorHijo().obtenerBajas();
+        getControladorHijo().obtenerProductos();
+        
+        Stage stage = (Stage) btnAgregar.getScene().getWindow();
+        stage.close();
 //        FlowPane pane;
 //        LOG.info("REGRESANDO A LA VISTA DE TODOS LOS PRODUCTOS UNA VEZ GUARDADO EL PRODUCTO ");
 //        pane= FXMLLoader.load(getClass().getResource("/fxml/Productos.fxml"));
@@ -338,5 +350,19 @@ public class StockController implements Initializable {
 
     public void setIdentificador(Integer identificador) {
         this.identificador = identificador;
+    }
+
+    /**
+     * @return the controladorHijo
+     */
+    public ProductosController getControladorHijo() {
+        return controladorHijo;
+    }
+
+    /**
+     * @param controladorHijo the controladorHijo to set
+     */
+    public void setControladorHijo(ProductosController controladorHijo) {
+        this.controladorHijo = controladorHijo;
     }
 }

@@ -77,6 +77,8 @@ public class PrincipalController implements Initializable {
     
     private Producto producto;
     
+    private ProductosController contolladorHijo;
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
     
@@ -178,6 +180,7 @@ public class PrincipalController implements Initializable {
       //  LOG.info(conceptoField.getText());
       
       // actualizar las tablas 
+            getContolladorHijo().obtenerProductos();
       Stage stage = (Stage) botonSave.getScene().getWindow();
     // do what you have to do
     stage.close();
@@ -207,6 +210,20 @@ public class PrincipalController implements Initializable {
      */
     public Producto getProducto() {
         return producto;
+    }
+
+    /**
+     * @return the contolladorHijo
+     */
+    public ProductosController getContolladorHijo() {
+        return contolladorHijo;
+    }
+
+    /**
+     * @param contolladorHijo the contolladorHijo to set
+     */
+    public void setContolladorHijo(ProductosController contolladorHijo) {
+        this.contolladorHijo = contolladorHijo;
     }
     
 }

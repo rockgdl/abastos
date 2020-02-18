@@ -163,7 +163,11 @@ public class ProductosController implements Initializable {
      {
         BorderPane pane;
         LOG.info("cargando vista de Agregar Producto");
-        pane= FXMLLoader.load(getClass().getResource("/fxml/Principal.fxml"));
+        FXMLLoader load =new FXMLLoader(getClass().getResource("/fxml/Principal.fxml"));
+        
+        pane = load.load();
+        PrincipalController controlador = load.getController();
+        controlador.setContolladorHijo(this);
       //  rootPane.getChildren().setAll(pane);
           Scene scene = new Scene(pane);
                  Stage stage = null;
@@ -338,6 +342,7 @@ public class ProductosController implements Initializable {
                 pane= load.load();
                 PrincipalController controlador = load.getController();
                 controlador.cargarDatos(producto);
+                controlador.setContolladorHijo(this);
                // rootPane.getChildren().setAll(pane);
                   Scene scene = new Scene(pane);
                  Stage stage = null;
@@ -438,6 +443,7 @@ public class ProductosController implements Initializable {
             controller.habilitarCampos(true, true);
             controller.cargarDatos(alta.getProducto(), alta.getCantidad(), alta.getUnidad(), alta.getPrecioVenta(), alta.getPrecioTotal());
             controller.setIdentificador(alta.getId());
+            controller.setControladorHijo(this);
            // rootPane.getChildren().setAll(pane);
               Scene scene = new Scene(pane);
                  Stage stage = null;
@@ -462,6 +468,7 @@ public class ProductosController implements Initializable {
         
         StockController controller = loader.getController();
         controller.habilitarCampos(false, true);
+        controller.setControladorHijo(this);
         
         
         
@@ -679,7 +686,15 @@ public class ProductosController implements Initializable {
             controller.habilitarCampos(true, false);
             controller.cargarDatos(baja.getProducto(), baja.getCantidad(), baja.getUnidad(), baja.getPrecioVenta(), 0.0);
             controller.setIdentificador(baja.getId());
-            rootPane.getChildren().setAll(pane);
+            controller.setControladorHijo(this);
+            //rootPane.getChildren().setAll(pane);
+            
+            Scene scene = new Scene(pane);
+                 Stage stage = null;
+                     stage= new Stage();
+                     stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setScene(scene);
+                stage.show();
            
         }
     }
@@ -694,8 +709,16 @@ public class ProductosController implements Initializable {
         
         StockController controller = loader.getController();
         controller.habilitarCampos(false, false);
+        controller.setControladorHijo(this);
         
-        rootPane.getChildren().setAll(pane);
+        //rootPane.getChildren().setAll(pane);
+        
+        Scene scene = new Scene(pane);
+                 Stage stage = null;
+                     stage= new Stage();
+                     stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setScene(scene);
+                stage.show();
         
         
 //        Bajas baja = new Bajas();
@@ -733,7 +756,7 @@ public class ProductosController implements Initializable {
         if(baja != null){
             try {
                 
-                baja.getProducto().setStock(baja.getProducto().getStock() + baja.getCantidad().intValue());
+                baja.getProducto().setStock(baja.getProducto().getStock() + baja.getCantidad());
                 daoP.updateProducto(baja.getProducto());
                 
                 daoB.eliminarBajas(baja);
@@ -753,6 +776,7 @@ public class ProductosController implements Initializable {
             }
             
             obtenerBajas();
+            obtenerProductos();
         }else{
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Debe de seleccionar un campo");
