@@ -30,6 +30,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -67,6 +68,8 @@ public class PrincipalController implements Initializable {
     private TextArea descripcionField;
     @FXML   
     private ComboBox comboUnidadMedida;
+    
+    @FXML Button botonSave;
        
 
     
@@ -161,18 +164,23 @@ public class PrincipalController implements Initializable {
                 Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
             }
         
-        FlowPane pane;
-        LOG.info("REGRESANDO A LA VISTA DE TODOS LOS PRODUCTOS UNA VEZ GUARDADO EL PRODUCTO ");
-        pane= FXMLLoader.load(getClass().getResource("/fxml/Productos.fxml"));
-       // borderPane.getChildren().setAll(pane);
-        
-          Scene scene = new Scene(pane);
-                 Stage stage = null;
-                     stage= new Stage();
-                     stage.initModality(Modality.APPLICATION_MODAL);
-                stage.setScene(scene);
-                stage.show();
-        LOG.info(conceptoField.getText());
+//        FlowPane pane;
+//        LOG.info("REGRESANDO A LA VISTA DE TODOS LOS PRODUCTOS UNA VEZ GUARDADO EL PRODUCTO ");
+//        pane= FXMLLoader.load(getClass().getResource("/fxml/Productos.fxml"));
+//       // borderPane.getChildren().setAll(pane);
+//        
+//          Scene scene = new Scene(pane);
+//                 Stage stage = null;
+//                     stage= new Stage();
+//                     stage.initModality(Modality.APPLICATION_MODAL);
+//                stage.setScene(scene);
+//                stage.show();
+      //  LOG.info(conceptoField.getText());
+      
+      // actualizar las tablas 
+      Stage stage = (Stage) botonSave.getScene().getWindow();
+    // do what you have to do
+    stage.close();
     }
     
     @FXML void eliminarProducto()

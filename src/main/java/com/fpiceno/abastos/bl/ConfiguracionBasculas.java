@@ -39,9 +39,9 @@ public class ConfiguracionBasculas  {
 	 * Devuelve la url   	
 	 * @return URL
 	 */
-		public static String obtenBaudios(){
+		public static Integer obtenBaudios(){
 			leerConfiguracion();
-			return configuracion.getProperty("baudios");
+			return Integer.parseInt(configuracion.getProperty("baudios"));
 		}
 
 		public static String obtenComPort(){

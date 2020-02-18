@@ -41,6 +41,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.stage.Stage;
 import jssc.SerialPortException;
 import org.hibernate.exception.JDBCConnectionException;
 
@@ -159,10 +160,14 @@ public class StockController implements Initializable {
             Logger.getLogger(StockController.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        FlowPane pane;
-        LOG.info("REGRESANDO A LA VISTA DE TODOS LOS PRODUCTOS UNA VEZ GUARDADO EL PRODUCTO ");
-        pane= FXMLLoader.load(getClass().getResource("/fxml/Productos.fxml"));
-        borderPane.getChildren().setAll(pane);
+//        FlowPane pane;
+//        LOG.info("REGRESANDO A LA VISTA DE TODOS LOS PRODUCTOS UNA VEZ GUARDADO EL PRODUCTO ");
+//        pane= FXMLLoader.load(getClass().getResource("/fxml/Productos.fxml"));
+//        borderPane.getChildren().setAll(pane);
+
+ Stage stage = (Stage) btnAgregar.getScene().getWindow();
+    // do what you have to do
+    stage.close();
         
     }
     
@@ -223,10 +228,10 @@ public class StockController implements Initializable {
             Logger.getLogger(StockController.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        FlowPane pane;
-        LOG.info("REGRESANDO A LA VISTA DE TODOS LOS PRODUCTOS UNA VEZ GUARDADO EL PRODUCTO ");
-        pane= FXMLLoader.load(getClass().getResource("/fxml/Productos.fxml"));
-        borderPane.getChildren().setAll(pane);
+//        FlowPane pane;
+//        LOG.info("REGRESANDO A LA VISTA DE TODOS LOS PRODUCTOS UNA VEZ GUARDADO EL PRODUCTO ");
+//        pane= FXMLLoader.load(getClass().getResource("/fxml/Productos.fxml"));
+//        borderPane.getChildren().setAll(pane);
     }
     
     
@@ -246,7 +251,7 @@ public class StockController implements Initializable {
         byte[] buffer = serialPort.readBytes(10);//Read 10 bytes from serial port
         String responseLine = new String(buffer);
         
-        LOG.info("tengo esto en linea "+responseLine);
+        LOG.info("tengo esto en linea"+responseLine);
      
         
                        
@@ -256,7 +261,10 @@ public class StockController implements Initializable {
 
                           while(tokens.hasMoreTokens()){
             String gramos = tokens.nextToken();
+            LOG.info("TENGO UN TOKEN DE GRAMOS:"+gramos);
 //		                		  String cadena = bf.readLine().replace("kg", "");
+
+            txtCantidad.setText(gramos);
                         String peso=tokens.nextToken().replace("kg", "");
 
 
@@ -268,6 +276,7 @@ public class StockController implements Initializable {
                          else
                          {
                              LOG.info("El peso es 0 no subire el archivo");
+                              txtCantidad.setText(gramos);
                          }
 
                           }
