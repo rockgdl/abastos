@@ -26,4 +26,5 @@ public interface AltasDao {
     public List<Altas> findAltaWhithProducto(Producto producto) throws ConnectException,JDBCConnectionException,CommunicationsException,InvocationTargetException,ExceptionInInitializerError;;
     public List<Altas> findAltaWhithFecha(Date fechaInicio, Date fechaFin) throws ConnectException,JDBCConnectionException,CommunicationsException,InvocationTargetException,ExceptionInInitializerError;;
     public List<Altas> findAltaWhithProductoAndFecha (Producto producto, Date fechaInicio, Date fechaFin)throws ConnectException,JDBCConnectionException,CommunicationsException,InvocationTargetException,ExceptionInInitializerError;;
+    public List<Altas> findAltaWhithRestante() throws ConnectException,JDBCConnectionException,CommunicationsException,InvocationTargetException,ExceptionInInitializerError;;
 }

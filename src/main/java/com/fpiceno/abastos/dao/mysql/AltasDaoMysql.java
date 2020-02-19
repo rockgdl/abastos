@@ -120,5 +120,18 @@ public class AltasDaoMysql implements AltasDao{
         
         return lista;
     }
+
+    @Override
+    public List<Altas> findAltaWhithRestante() throws ConnectException, JDBCConnectionException, CommunicationsException, InvocationTargetException, ExceptionInInitializerError {
+       Session session = getSession();
+        Transaction tx = session.beginTransaction();
+        Criteria cr = session.createCriteria(Altas.class);
+        
+        cr.add(Restrictions.ne("restante", 0.0));
+        List<Altas> lista = cr.list();
+        tx.commit();
+        
+        return lista;
+    }
     
 }

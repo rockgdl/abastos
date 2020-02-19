@@ -26,6 +26,7 @@ import java.net.ConnectException;
 import java.net.URL;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -117,9 +118,11 @@ public class StockController implements Initializable {
     
     @FXML private void agregar(ActionEvent event) throws IOException{
         try { 
+            //Si se trata de una alta
             if(getIsAlta()){
                 Altas alta= new Altas();
                 alta.setCantidad(Double.parseDouble(txtCantidad.getText()));
+                alta.setRestante(Double.parseDouble(txtCantidad.getText()));
                 alta.setFecha(new Date());
                 alta.setProducto(boxProducto.getValue());
                 alta.setPrecioVenta(Double.parseDouble(txtPrecio.getText()));
@@ -135,19 +138,62 @@ public class StockController implements Initializable {
                 producto.setCostoTotal(producto.getCostoTotal() + alta.getPrecioTotal());
                 daoP.updateProducto(producto);
                 
-            }else{
+            }else{//si se trata de una baja
+                
+                Double cantidad = Double.parseDouble(txtCantidad.getText());
                 Bajas baja = new Bajas();
                 baja.setCantidad(Double.parseDouble(txtCantidad.getText()));
                 baja.setFecha(new Date());
                 baja.setProducto(boxProducto.getValue());
                 baja.setPrecioVenta(Double.parseDouble(txtPrecio.getText()));
                 baja.setUnidad(boxUnidad.getValue());
+//                
+//                
+                if (boxProducto.getValue().getStock() >= cantidad){
+                    Double cantidadTemp = cantidad;
+                    int i = 0;
+                    List <Altas> listaRegistros = daoA.findAltaWhithRestante();
+                    
+                    while (cantidadTemp > 0.0){
+                        Bajas newBaja = new Bajas();
+                        
+                        if(listaRegistros.get(i).getRestante() >= cantidadTemp){
+                            
+                            listaRegistros.get(i).setRestante(listaRegistros.get(i).getRestante()- cantidadTemp);
+                            newBaja.setCantidad(cantidadTemp);
+                            
+                            cantidadTemp = 0.0;
+                            
+                        }else{
+                            newBaja.setCantidad(listaRegistros.get(i).getCantidad());
+                            cantidadTemp = cantidadTemp - listaRegistros.get(i).getRestante();
+                            
+                            listaRegistros.get(i).setRestante(0.0);
+                            
+                        }
+                        
+                        daoA.updateAltas(listaRegistros.get(i));
+                        newBaja.setFecha(new Date());
+                        newBaja.setPrecioVenta(listaRegistros.get(i).getPrecioVenta());
+                        newBaja.setProducto(boxProducto.getValue());
+                        newBaja.setUnidad(boxUnidad.getValue());
+                        System.out.println("Nueva baja - " + newBaja.getCantidad() + " - " + newBaja.getPrecioVenta());
+                        
+                        daoB.agregarBajas(newBaja);
+                        i++;
+                        
+                    }
+                    //daoB.agregarBajas(baja);
+                    
+                    Producto producto = baja.getProducto();
+                    producto.setStock(producto.getStock() - baja.getCantidad());
+                    daoP.updateProducto(producto);
+                }else{
+                    //Mandar alerta
+                    System.out.println("No hay tantos productos");
+                }
                 
-                daoB.agregarBajas(baja);
                 
-                Producto producto = baja.getProducto();
-                producto.setStock(producto.getStock() - baja.getCantidad());
-                daoP.updateProducto(producto);
             }
         } catch (ConnectException ex) {
             Logger.getLogger(StockController.class.getName()).log(Level.SEVERE, null, ex);
@@ -187,6 +233,7 @@ public class StockController implements Initializable {
                 Altas alta= new Altas();
                 
                 alta.setCantidad(valorCapturado);
+                alta.setRestante(valorCapturado);
                 alta.setFecha(new Date());
                 alta.setProducto(boxProducto.getValue());
                 alta.setPrecioVenta(Double.parseDouble(txtPrecio.getText()));
