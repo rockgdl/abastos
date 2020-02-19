@@ -49,6 +49,7 @@
                                     <TableColumn fx:id="columnCostoTotal" prefWidth="129.0" text="costo Total" />
                                  </columns>
                               </TableView>
+                              <Button layoutX="898.0" layoutY="177.0" mnemonicParsing="false" onAction="#vista" text="vista" />
                            </children>
                         </AnchorPane>
                   </content>

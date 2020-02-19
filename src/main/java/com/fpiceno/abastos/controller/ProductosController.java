@@ -871,4 +871,11 @@ public class ProductosController implements Initializable {
         pane= FXMLLoader.load(getClass().getResource("/fxml/Cliente.fxml"));
         rootPane.getChildren().setAll(pane);
     }
+    
+    @FXML private void vista(ActionEvent event) throws IOException{
+        BorderPane pane;
+        LOG.info("cargando vista Cliente");
+        pane= FXMLLoader.load(getClass().getResource("/fxml/Vista.fxml"));
+        rootPane.getChildren().setAll(pane);
+    }
 }
