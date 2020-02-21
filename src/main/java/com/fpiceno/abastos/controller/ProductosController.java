@@ -154,8 +154,21 @@ public class ProductosController implements Initializable {
                 
             } catch (InvocationTargetException ex) {
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+                
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                
+                alerta.setHeaderText("ERROR DE InvocationTargetException ");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                
             } catch (ExceptionInInitializerError ex) {
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+                
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                
+                alerta.setHeaderText("No se pudo comunicar iniciar la aplicacion");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
             }
     }    
     
@@ -175,10 +188,6 @@ public class ProductosController implements Initializable {
                      stage.initModality(Modality.APPLICATION_MODAL);
                 stage.setScene(scene);
                 stage.show();
-        
-        
-        
-        
      }
     
        public void obtenerProductos(){
@@ -225,6 +234,13 @@ public class ProductosController implements Initializable {
                 
             } catch (InvocationTargetException ex) {
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+                
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                
+                alerta.setHeaderText("ERROR DE InvocationTargetException ");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                
             } catch (ExceptionInInitializerError ex) {
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -272,7 +288,7 @@ public class ProductosController implements Initializable {
                 alerta.show();
                 
             } catch (InvocationTargetException ex) {
-                       Alert alerta = new Alert(Alert.AlertType.ERROR);
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
                 
                 alerta.setHeaderText("ERROR DE InvocationTargetException ");
                 alerta.setContentText(ex.getMessage());
@@ -358,7 +374,11 @@ public class ProductosController implements Initializable {
                 ProductoDao dao = new ProductoDaoMysql();
                 
                 dao.eliminarProducto(tablaProductos.getSelectionModel().getSelectedItem());
+                obtenerAltas();
+                obtenerProductos();
+                
             } catch (ConnectException ex) {
+                LOG.info("Error de ConnectException:" + ex.getMessage());
                      Alert alerta = new Alert(Alert.AlertType.ERROR);
                 alerta.setHeaderText("error de ConnectException");
                 alerta.setContentText(ex.getMessage());
@@ -366,6 +386,8 @@ public class ProductosController implements Initializable {
                   System.out.println("trono al eliminar la excepcion connecException");
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (JDBCConnectionException ex) {
+                
+                LOG.info("Error de JDBCConnectionException:" + ex.getMessage());
                      Alert alerta = new Alert(Alert.AlertType.ERROR);
                 alerta.setHeaderText("error de JDBCConnectionException");
                 alerta.setContentText(ex.getMessage());
@@ -373,9 +395,20 @@ public class ProductosController implements Initializable {
                   System.out.println("trono al eliminar la excepcion JDBCConnectionException ");
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (CommunicationsException ex) {
+                
+                LOG.info("Error de CommunactionsExceptions:" + ex.getMessage());
                   System.out.println("trono al eliminar la excepcion CommunicationsException" );
+                  
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                
+                alerta.setHeaderText("Error de CommunicationsException");
+                alerta.setContentText(ex.getMessage());
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (InvocationTargetException ex) {
+                
+                LOG.info("Error de InvocationTargetException:" + ex.getMessage());
                 Alert alerta = new Alert(Alert.AlertType.ERROR);
                 alerta.setHeaderText("error de InvocationTargetException");
                 alerta.setContentText(ex.getMessage());
@@ -384,13 +417,24 @@ public class ProductosController implements Initializable {
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ExceptionInInitializerError ex) {
                 
+                LOG.info("Error de ContraintViolationException: " + ex.getMessage());
                 Alert alerta = new Alert(Alert.AlertType.ERROR);
                 alerta.setHeaderText("error de ExceptionInInitializerError");
                 alerta.setContentText(ex.getMessage());
                 alerta.show();
-                  System.out.println("trono al eliminar la excepcion ExceptionInInitializerError");
+                System.out.println("trono al eliminar la excepcion ExceptionInInitializerError");
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (NullPointerException ex){
+            } catch(IllegalArgumentException ex){
+                LOG.info("Error de IllegalArgumentException:" + ex.getMessage());
+                
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de IllegalArgumentException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                
+            }   catch (NullPointerException ex){
+                LOG.info("Error de NullPointerException:" + ex.getMessage());
+                
                 Alert alerta = new Alert(Alert.AlertType.ERROR);
                 alerta.setHeaderText("error de NullPointerException");
                 alerta.setContentText(ex.getMessage());
@@ -398,7 +442,9 @@ public class ProductosController implements Initializable {
                   System.out.println("trono al eliminar la excepcion NullPointerException");
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ConstraintViolationException ex) {
-                         Alert alerta = new Alert(Alert.AlertType.ERROR);
+                
+                LOG.info("Error de ContraintViolationException:" + ex.getMessage());
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
                 alerta.setHeaderText("error de ConstraintViolationException");
                 alerta.setContentText(ex.getMessage());
                 alerta.show();
@@ -406,24 +452,14 @@ public class ProductosController implements Initializable {
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            
-               tablaAltas.getItems().clear();
                 
-            try {
-                oblistAltas.addAll(daoA.obtenerTodos());
-            } catch (ConnectException ex) {
-                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (JDBCConnectionException ex) {
-                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (CommunicationsException ex) {
-                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InvocationTargetException ex) {
-                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ExceptionInInitializerError ex) {
-                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+                LOG.info("Error de SQLException: "+ ex.getMessage());
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de SQLException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
             }
+            
        }
     
     @FXML private void seleccionarAlta(MouseEvent event) throws IOException{
@@ -468,10 +504,7 @@ public class ProductosController implements Initializable {
         
         StockController controller = loader.getController();
         controller.habilitarCampos(false, true);
-        controller.setControladorHijo(this);
-        
-        
-        
+        controller.setControladorHijo(this);        
        // rootPane.getChildren().setAll(pane);
         
          Scene scene = new Scene(pane);
@@ -480,44 +513,7 @@ public class ProductosController implements Initializable {
                      stage.initModality(Modality.APPLICATION_MODAL);
                 stage.setScene(scene);
                 stage.show();
-//        Altas alta = new Altas();    
-//        try{
-//            alta.setCantidad(Double.parseDouble(txtCantidadAlta.getText()));
-//            alta.setFecha(new Date());
-//            alta.setPrecioVenta(Double.parseDouble(txtPrecioAlta.getText()));
-//            alta.setUnidad((UnidadMedida) boxUnidadAlta.getValue());
-//            
-//            alta.setProducto((Producto) boxProductoAlta.getValue());
-//            
-//            System.out.println(alta.getProducto().getFechaAlta());
-//            
-//            daoA.agregarAltas(alta);
-//            System.out.println(alta.getProducto().getFechaAlta());
-//            Producto producto = alta.getProducto();
-//            
-//            if(producto.getStock()== null){
-//                producto.setStock( 0 + alta.getCantidad().intValue());
-//            }else{
-//                producto.setStock(producto.getStock()+alta.getCantidad().intValue());
-//            }
-//            
-//            dao.updateProducto(producto);
-//            
-//            obtenerAltas();
-//            obtenerProductos();
-//        }catch(NumberFormatException ex){
-//            System.out.println(ex.getMessage()+" No es un numero");
-//        }catch (ConnectException ex) {
-//            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (JDBCConnectionException ex) {
-//            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (CommunicationsException ex) {
-//            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (InvocationTargetException ex) {
-//            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (ExceptionInInitializerError ex) {
-//            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+
     }
    
     @FXML private void openClientFx(ActionEvent event){
@@ -553,22 +549,91 @@ public class ProductosController implements Initializable {
                 daoA.eliminarAltas(alta);
                 
             } catch (ConnectException ex) {
+                LOG.info("Error de ConnectException:" + ex.getMessage());
+                     Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de ConnectException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                  System.out.println("trono al eliminar la excepcion connecException");
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (JDBCConnectionException ex) {
+                
+                LOG.info("Error de JDBCConnectionException:" + ex.getMessage());
+                     Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de JDBCConnectionException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                  System.out.println("trono al eliminar la excepcion JDBCConnectionException ");
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (CommunicationsException ex) {
+                
+                LOG.info("Error de CommunactionsExceptions:" + ex.getMessage());
+                  System.out.println("trono al eliminar la excepcion CommunicationsException" );
+                  
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                
+                alerta.setHeaderText("Error de CommunicationsException");
+                alerta.setContentText(ex.getMessage());
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (InvocationTargetException ex) {
+                
+                LOG.info("Error de InvocationTargetException:" + ex.getMessage());
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de InvocationTargetException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                  System.out.println("trono al eliminar la excepcion InvocationTargetException");
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ExceptionInInitializerError ex) {
+                
+                LOG.info("Error de ContraintViolationException: " + ex.getMessage());
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de ExceptionInInitializerError");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                System.out.println("trono al eliminar la excepcion ExceptionInInitializerError");
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NullPointerException ex){
+                LOG.info("Error de NullPointerException:" + ex.getMessage());
+                
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de NullPointerException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                  System.out.println("trono al eliminar la excepcion NullPointerException");
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ConstraintViolationException ex) {
+                
+                LOG.info("Error de ContraintViolationException:" + ex.getMessage());
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de ConstraintViolationException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                System.out.println("trono al eliminar la excepcion ConstraintViolationException");
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+                
+                LOG.info("Error de SQLException: "+ ex.getMessage());
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de SQLException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
             } catch (SessionException ex){
-                System.out.println("La sesion esta cerrada");
+                
+                LOG.info("Error en SessionException: " + ex.getMessage());
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("Error en SessionException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
             }
             
             obtenerAltas();
             obtenerProductos();
         }else{
+            LOG.info("No se selecciono un campo alta");
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Debe de seleccionar un campo");
             alert.show();
@@ -645,14 +710,69 @@ public class ProductosController implements Initializable {
                 tablaAltas.setItems(oblistAltas);
                 
             } catch (ConnectException ex) {
+                LOG.info("Error de ConnectException:" + ex.getMessage());
+                     Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de ConnectException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                  System.out.println("trono al eliminar la excepcion connecException");
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (JDBCConnectionException ex) {
+                
+                LOG.info("Error de JDBCConnectionException:" + ex.getMessage());
+                     Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de JDBCConnectionException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                  System.out.println("trono al eliminar la excepcion JDBCConnectionException ");
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (CommunicationsException ex) {
+                
+                LOG.info("Error de CommunactionsExceptions:" + ex.getMessage());
+                  System.out.println("trono al eliminar la excepcion CommunicationsException" );
+                  
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                
+                alerta.setHeaderText("Error de CommunicationsException");
+                alerta.setContentText(ex.getMessage());
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (InvocationTargetException ex) {
+                
+                LOG.info("Error de InvocationTargetException:" + ex.getMessage());
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de InvocationTargetException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                  System.out.println("trono al eliminar la excepcion InvocationTargetException");
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ExceptionInInitializerError ex) {
+                
+                LOG.info("Error de ContraintViolationException: " + ex.getMessage());
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de ExceptionInInitializerError");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                System.out.println("trono al eliminar la excepcion ExceptionInInitializerError");
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NullPointerException ex){
+                LOG.info("Error de NullPointerException:" + ex.getMessage());
+                
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de NullPointerException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                  System.out.println("trono al eliminar la excepcion NullPointerException");
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ConstraintViolationException ex) {
+                
+                LOG.info("Error de ContraintViolationException:" + ex.getMessage());
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de ConstraintViolationException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                System.out.println("trono al eliminar la excepcion ConstraintViolationException");
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             }
     }
@@ -719,35 +839,7 @@ public class ProductosController implements Initializable {
                      stage.initModality(Modality.APPLICATION_MODAL);
                 stage.setScene(scene);
                 stage.show();
-        
-        
-//        Bajas baja = new Bajas();
-//            
-//        try{
-//            baja.setCantidad(Double.parseDouble(txtCantidadBaja.getText()));
-//            baja.setFecha(new Date());
-//            baja.setPrecioVenta(Double.parseDouble(txtPrecioBaja.getText()));
-//            baja.setUnidad((UnidadMedida) boxUnidadBaja.getValue());
-//            
-//            baja.setProducto((Producto) boxProductoBaja.getValue());
-//            
-//            daoB.agregarBajas(baja);
-//            System.out.println(boxCliente.getSelectionModel().getSelectedItem().getCorreo());
-//            obtenerBajas();
-//        }catch(NumberFormatException ex){
-//            System.out.println(ex.getMessage()+" No es un numero");
-//        }
-//        }catch (ConnectException ex) {
-//            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (JDBCConnectionException ex) {
-//            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (CommunicationsException ex) {
-//            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (InvocationTargetException ex) {
-//            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (ExceptionInInitializerError ex) {
-//            Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+
     }
     
     @FXML private void EliminarBaja(ActionEvent event){
@@ -762,22 +854,85 @@ public class ProductosController implements Initializable {
                 daoB.eliminarBajas(baja);
                 
             } catch (ConnectException ex) {
+                LOG.info("Error de ConnectException:" + ex.getMessage());
+                     Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de ConnectException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                  System.out.println("trono al eliminar la excepcion connecException");
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (JDBCConnectionException ex) {
+                
+                LOG.info("Error de JDBCConnectionException:" + ex.getMessage());
+                     Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de JDBCConnectionException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                  System.out.println("trono al eliminar la excepcion JDBCConnectionException ");
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (CommunicationsException ex) {
+                
+                LOG.info("Error de CommunactionsExceptions:" + ex.getMessage());
+                  System.out.println("trono al eliminar la excepcion CommunicationsException" );
+                  
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                
+                alerta.setHeaderText("Error de CommunicationsException");
+                alerta.setContentText(ex.getMessage());
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (InvocationTargetException ex) {
+                
+                LOG.info("Error de InvocationTargetException:" + ex.getMessage());
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de InvocationTargetException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                  System.out.println("trono al eliminar la excepcion InvocationTargetException");
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ExceptionInInitializerError ex) {
+                
+                LOG.info("Error de ContraintViolationException: " + ex.getMessage());
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de ExceptionInInitializerError");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                System.out.println("trono al eliminar la excepcion ExceptionInInitializerError");
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NullPointerException ex){
+                LOG.info("Error de NullPointerException:" + ex.getMessage());
+                
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de NullPointerException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                  System.out.println("trono al eliminar la excepcion NullPointerException");
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ConstraintViolationException ex) {
+                
+                LOG.info("Error de ContraintViolationException:" + ex.getMessage());
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de ConstraintViolationException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                System.out.println("trono al eliminar la excepcion ConstraintViolationException");
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SessionException ex){
                 System.out.println("La sesion esta cerrada");
+                
+                LOG.info("Error de SessionException: " + ex.getMessage());
+                
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("Error de SessionException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
             }
             
             obtenerBajas();
             obtenerProductos();
         }else{
+            LOG.info("No se selecciono un campo en baja");
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Debe de seleccionar un campo");
             alert.show();
@@ -853,16 +1008,71 @@ public class ProductosController implements Initializable {
                 tablaBajas.setItems(oblistBajas);
                 
             } catch (ConnectException ex) {
+                LOG.info("Error de ConnectException:" + ex.getMessage());
+                     Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de ConnectException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                  System.out.println("trono al eliminar la excepcion connecException");
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (JDBCConnectionException ex) {
+                
+                LOG.info("Error de JDBCConnectionException:" + ex.getMessage());
+                     Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de JDBCConnectionException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                  System.out.println("trono al eliminar la excepcion JDBCConnectionException ");
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (CommunicationsException ex) {
+                
+                LOG.info("Error de CommunactionsExceptions:" + ex.getMessage());
+                  System.out.println("trono al eliminar la excepcion CommunicationsException" );
+                  
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                
+                alerta.setHeaderText("Error de CommunicationsException");
+                alerta.setContentText(ex.getMessage());
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (InvocationTargetException ex) {
+                
+                LOG.info("Error de InvocationTargetException:" + ex.getMessage());
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de InvocationTargetException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                  System.out.println("trono al eliminar la excepcion InvocationTargetException");
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ExceptionInInitializerError ex) {
+                
+                LOG.info("Error de ContraintViolationException: " + ex.getMessage());
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de ExceptionInInitializerError");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                System.out.println("trono al eliminar la excepcion ExceptionInInitializerError");
                 Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            } catch (NullPointerException ex){
+                LOG.info("Error de NullPointerException:" + ex.getMessage());
+                
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de NullPointerException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                  System.out.println("trono al eliminar la excepcion NullPointerException");
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ConstraintViolationException ex) {
+                
+                LOG.info("Error de ContraintViolationException:" + ex.getMessage());
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("error de ConstraintViolationException");
+                alerta.setContentText(ex.getMessage());
+                alerta.show();
+                System.out.println("trono al eliminar la excepcion ConstraintViolationException");
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            } 
     }
     
     @FXML private void agregarCliente(ActionEvent event) throws IOException{
@@ -877,5 +1087,21 @@ public class ProductosController implements Initializable {
         LOG.info("cargando vista Cliente");
         pane= FXMLLoader.load(getClass().getResource("/fxml/Vista.fxml"));
         rootPane.getChildren().setAll(pane);
+    }
+    
+    @FXML private void openVistaConfig() throws IOException{
+            
+                LOG.info("ABRIENDO LA VENTANA DE CONFIGURACION VISTA");
+                BorderPane pane;
+                LOG.info("cargando vista");
+                FXMLLoader load = new FXMLLoader(getClass().getResource("/fxml/Vista.fxml"));
+                pane = load.load();
+                //rootPane.getChildren().setAll(pane);
+                
+                Scene scene = new Scene(pane);
+                Stage stage= new Stage();
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setScene(scene);
+                stage.show();
     }
 }

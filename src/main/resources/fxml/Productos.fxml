@@ -22,6 +22,11 @@
                   </Menu>
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Vista de reportes">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#openVistaConfig" text="Cargar vista" />
+              </items>
+            </Menu>
           <Menu mnemonicParsing="false" text="Acerca de">
             <items>
               <MenuItem mnemonicParsing="false" text="About" />

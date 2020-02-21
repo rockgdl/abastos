@@ -91,99 +91,107 @@ public class PrincipalController implements Initializable {
      @FXML
     public void guardaProducto() throws IOException
     {        
-            try {
-                if(getProducto() != null){
-                    
-                    LOG.info("el boton es para inicializar un update al producto ");
-                    //getProducto().setCostoTotal(Double.parseDouble(pesoField.getText()));
-          //          getProducto().setCostoUnitario(Double.parseDouble(costoUnitField.getText()));
-                    getProducto().setDescripcion(descripcionField.getText());
-                    getProducto().setNombre(conceptoField.getText());
-                    getProducto().setUnidad((UnidadMedida)comboUnidadMedida.getValue());
-                    dao.updateProducto(producto);
-                }else{
-                    LOG.info("SE INICIALIZA UN NUEVO PRODUCTO PONIENDO UN STOCK EN 0");
-                    Producto newProducto= new Producto();
-                    //newProducto.setCostoTotal(Double.parseDouble(pesoField.getText()));
-            //        newProducto.setCostoUnitario(Double.parseDouble(costoUnitField.getText()));
-                    newProducto.setDescripcion(descripcionField.getText());
-                    newProducto.setFechaAlta(new Date());
-                    newProducto.setNombre(conceptoField.getText());
-                    newProducto.setUnidad((UnidadMedida)comboUnidadMedida.getValue());
-                    newProducto.setStock(0.0);//es la primera vez
-                    newProducto.setCostoTotal(0.0); //igual es su primer vez
-                    dao.agregarProducto(newProducto);
+            if(descripcionField.getText().equals("") || conceptoField.getText().equals("") || comboUnidadMedida.getValue() == null){
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("Todos los campos deben de estar llenos");
+                alerta.show();
+            }else{
+                try {
+                    if(getProducto() != null){
+
+                        LOG.info("el boton es para inicializar un update al producto ");
+                        //getProducto().setCostoTotal(Double.parseDouble(pesoField.getText()));
+              //          getProducto().setCostoUnitario(Double.parseDouble(costoUnitField.getText()));
+                        getProducto().setDescripcion(descripcionField.getText());
+                        getProducto().setNombre(conceptoField.getText());
+                        getProducto().setUnidad((UnidadMedida)comboUnidadMedida.getValue());
+                        dao.updateProducto(producto);
+                    }else{
+                        LOG.info("SE INICIALIZA UN NUEVO PRODUCTO PONIENDO UN STOCK EN 0");
+                        Producto newProducto= new Producto();
+                        //newProducto.setCostoTotal(Double.parseDouble(pesoField.getText()));
+                //        newProducto.setCostoUnitario(Double.parseDouble(costoUnitField.getText()));
+                        newProducto.setDescripcion(descripcionField.getText());
+                        newProducto.setFechaAlta(new Date());
+                        newProducto.setNombre(conceptoField.getText());
+                        newProducto.setUnidad((UnidadMedida)comboUnidadMedida.getValue());
+                        newProducto.setStock(0.0);//es la primera vez
+                        newProducto.setCostoTotal(0.0); //igual es su primer vez
+                        dao.agregarProducto(newProducto);
+                    }
+                } catch (ConnectException ex) {
+
+                    LOG.info("Error de ConnectException: " + ex.getMessage());
+                     Alert alerta = new Alert(Alert.AlertType.ERROR);
+
+                    alerta.setHeaderText("ERROR DE ConnectException");
+                    alerta.setContentText(ex.getMessage());
+                    alerta.show();
+
+                    Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (JDBCConnectionException ex) {
+
+                    LOG.info("Error de JDBCConnectionException: " + ex.getMessage());
+                         Alert alerta = new Alert(Alert.AlertType.ERROR);
+
+                    alerta.setHeaderText("ERROR DE JDBCConnectionException");
+                    alerta.setContentText(ex.getMessage());
+                    alerta.show();
+                    Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (CommunicationsException ex) {
+
+                    LOG.info("Error de CommunicationsException: " + ex.getMessage());
+                         Alert alerta = new Alert(Alert.AlertType.ERROR);
+
+                    alerta.setHeaderText("ERROR DE CommunicationsException");
+                    alerta.setContentText(ex.getMessage());
+                    alerta.show();
+                    Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InvocationTargetException ex) {
+
+                    LOG.info("InvocationTargetException: " + ex.getMessage());
+                         Alert alerta = new Alert(Alert.AlertType.ERROR);
+
+                    alerta.setHeaderText("ERROR DE InvocationTargetException");
+                    alerta.setContentText(ex.getMessage());
+                    alerta.show();
+                    Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ExceptionInInitializerError ex) {
+
+                    LOG.info("ExceptionInInitializerError" + ex.getMessage());
+                         Alert alerta = new Alert(Alert.AlertType.ERROR);
+
+                    alerta.setHeaderText("ERROR DE ExceptionInInitializerError");
+                    alerta.setContentText(ex.getMessage());
+                    alerta.show();
+                    Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
+                }catch (NullPointerException ex){
+
+                    LOG.info("Error de NullPointerException: " + ex.getMessage());
+                         Alert alerta = new Alert(Alert.AlertType.ERROR);
+
+                    alerta.setHeaderText("ERROR DE NullPointerException");
+                    alerta.setContentText(ex.getMessage());
+                    alerta.show();
+                    Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
+                }catch(NumberFormatException ex){
+
+                    LOG.info("Error de NumberFormatException: " + ex.getMessage());
+                         Alert alerta = new Alert(Alert.AlertType.ERROR);
+
+                    alerta.setHeaderText("ERROR DE NumberFormatException");
+                    alerta.setContentText(ex.getMessage());
+                    alerta.show();
+                    Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } catch (ConnectException ex) {
-                 Alert alerta = new Alert(Alert.AlertType.ERROR);
-                
-                alerta.setHeaderText("ERROR DE ConnectException");
-                alerta.setContentText(ex.getMessage());
-                alerta.show();
-                
-                Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (JDBCConnectionException ex) {
-                     Alert alerta = new Alert(Alert.AlertType.ERROR);
-                
-                alerta.setHeaderText("ERROR DE JDBCConnectionException");
-                alerta.setContentText(ex.getMessage());
-                alerta.show();
-                Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (CommunicationsException ex) {
-                     Alert alerta = new Alert(Alert.AlertType.ERROR);
-                
-                alerta.setHeaderText("ERROR DE CommunicationsException");
-                alerta.setContentText(ex.getMessage());
-                alerta.show();
-                Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InvocationTargetException ex) {
-                     Alert alerta = new Alert(Alert.AlertType.ERROR);
-                
-                alerta.setHeaderText("ERROR DE InvocationTargetException");
-                alerta.setContentText(ex.getMessage());
-                alerta.show();
-                Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ExceptionInInitializerError ex) {
-                     Alert alerta = new Alert(Alert.AlertType.ERROR);
-                
-                alerta.setHeaderText("ERROR DE ExceptionInInitializerError");
-                alerta.setContentText(ex.getMessage());
-                alerta.show();
-                Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
-            }catch (NullPointerException ex){
-                     Alert alerta = new Alert(Alert.AlertType.ERROR);
-                
-                alerta.setHeaderText("ERROR DE NullPointerException");
-                alerta.setContentText(ex.getMessage());
-                alerta.show();
-                Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
-            }catch(NumberFormatException ex){
-                     Alert alerta = new Alert(Alert.AlertType.ERROR);
-                
-                alerta.setHeaderText("ERROR DE NumberFormatException");
-                alerta.setContentText(ex.getMessage());
-                alerta.show();
-                Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        
-//        FlowPane pane;
-//        LOG.info("REGRESANDO A LA VISTA DE TODOS LOS PRODUCTOS UNA VEZ GUARDADO EL PRODUCTO ");
-//        pane= FXMLLoader.load(getClass().getResource("/fxml/Productos.fxml"));
-//       // borderPane.getChildren().setAll(pane);
-//        
-//          Scene scene = new Scene(pane);
-//                 Stage stage = null;
-//                     stage= new Stage();
-//                     stage.initModality(Modality.APPLICATION_MODAL);
-//                stage.setScene(scene);
-//                stage.show();
-      //  LOG.info(conceptoField.getText());
-      
-      // actualizar las tablas 
+          //  LOG.info(conceptoField.getText());
+
+            // actualizar las tablas 
             getContolladorHijo().obtenerProductos();
-      Stage stage = (Stage) botonSave.getScene().getWindow();
-    // do what you have to do
-    stage.close();
+            Stage stage = (Stage) botonSave.getScene().getWindow();
+            // do what you have to do
+            stage.close();
+        }
     }
     
     @FXML void eliminarProducto()
