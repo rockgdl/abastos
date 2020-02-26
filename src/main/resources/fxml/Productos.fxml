@@ -42,19 +42,20 @@
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <Button layoutX="894.0" layoutY="49.0" mnemonicParsing="false" onMouseClicked="#agregarProducto" text="Nuevo" />
-                              <Button layoutX="894.0" layoutY="113.0" mnemonicParsing="false" onAction="#eliminarProducto" text="eliminar" />
-                              <TableView fx:id="tablaProductos" layoutX="26.0" layoutY="33.0" onMouseClicked="#editarProducto" prefHeight="504.0" prefWidth="854.0">
+                              <Button layoutX="1025.0" layoutY="62.0" mnemonicParsing="false" onMouseClicked="#agregarProducto" text="Nuevo" />
+                              <Button layoutX="1025.0" layoutY="126.0" mnemonicParsing="false" onAction="#eliminarProducto" text="eliminar" />
+                              <TableView fx:id="tablaProductos" layoutX="26.0" layoutY="33.0" onMouseClicked="#editarProducto" prefHeight="504.0" prefWidth="928.0">
                                  <columns>
                                     <TableColumn fx:id="columnId" prefWidth="75.0" text="id" />
-                                    <TableColumn fx:id="columnNombre" prefWidth="149.0" text="nombre" />
-                                    <TableColumn fx:id="columnStock" prefWidth="107.0" text="Stock" />
+                                    <TableColumn fx:id="columnNombre" prefWidth="149.0" text="PRODUCTO" />
+                                    <TableColumn fx:id="columnStock" prefWidth="107.0" text="CANTIDAD" />
+                                    <TableColumn fx:id="columnUnidad" prefWidth="75.0" text="UNIDAD" />
                                     <TableColumn fx:id="columnDescripcion" prefWidth="219.0" text="descripcion" />
-                                    <TableColumn fx:id="columnFecha" prefWidth="174.0" text="Fecha de alta" />
-                                    <TableColumn fx:id="columnCostoTotal" prefWidth="129.0" text="costo Total" />
+                                    <TableColumn fx:id="columnCostoTotal" prefWidth="129.0" text="SALDO" />
+                                    <TableColumn fx:id="columnFecha" prefWidth="174.0" text="FECHA" />
                                  </columns>
                               </TableView>
-                              <Button layoutX="898.0" layoutY="177.0" mnemonicParsing="false" onAction="#vista" text="vista" />
+                              <Button layoutX="1029.0" layoutY="190.0" mnemonicParsing="false" onAction="#vista" text="vista" />
                            </children>
                         </AnchorPane>
                   </content>

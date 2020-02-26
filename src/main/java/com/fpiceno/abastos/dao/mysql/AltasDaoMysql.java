@@ -50,12 +50,13 @@ public class AltasDaoMysql implements AltasDao{
     @Override
     public void eliminarAltas(Altas alta) throws ConnectException, JDBCConnectionException, CommunicationsException, InvocationTargetException, ExceptionInInitializerError {
         Session session = getSession();
-        session.beginTransaction();
+        Transaction tx = session.beginTransaction();
+        
 
         session.delete(alta);
-        session.getTransaction().commit();
+        tx.commit();
 
-        session.close();
+//        session.close();
     }
 
     @Override

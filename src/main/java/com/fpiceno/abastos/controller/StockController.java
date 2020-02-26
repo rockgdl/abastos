@@ -351,6 +351,7 @@ public class StockController implements Initializable {
                     Alert alerta = new Alert(Alert.AlertType.ERROR);
                     alerta.setHeaderText("Error de NumberFormatException");
                     alerta.setContentText(ex.getMessage());
+                    alerta.show();
             }
 
             getControladorHijo().obtenerAltas();

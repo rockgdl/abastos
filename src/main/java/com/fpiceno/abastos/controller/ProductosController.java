@@ -70,7 +70,7 @@ public class ProductosController implements Initializable {
         private ProductoDao daoP = new ProductoDaoMysql();
 
        @FXML TableView<Producto> tablaProductos;
-       @FXML TableColumn <Producto, String> columnNombre, columnDescripcion, columnFecha;
+       @FXML TableColumn <Producto, String> columnNombre, columnDescripcion, columnFecha, columnUnidad;
        @FXML TableColumn <Producto, Double> columnCostoUnit, columnCostoTotal;
        @FXML TableColumn <Producto, Integer> columnId, columnStock;
        @FXML private FlowPane rootPane;
@@ -201,6 +201,7 @@ public class ProductosController implements Initializable {
             columnDescripcion.setCellValueFactory(new PropertyValueFactory("descripcion"));
             columnStock.setCellValueFactory(new PropertyValueFactory("stock"));
             columnFecha.setCellValueFactory(new PropertyValueFactory("fechaAlta"));
+            columnUnidad.setCellValueFactory(new PropertyValueFactory("unidad"));
 //            columnCostoUnit.setCellValueFactory(new PropertyValueFactory("costoUnitario"));
             columnCostoTotal.setCellValueFactory(new PropertyValueFactory("costoTotal"));
             
@@ -546,7 +547,7 @@ public class ProductosController implements Initializable {
                 alta.getProducto().setCostoTotal(precioTotalProducto);
                 
                 daoP.updateProducto(alta.getProducto());
-                daoA.eliminarAltas(alta);
+                
                 
             } catch (ConnectException ex) {
                 LOG.info("Error de ConnectException:" + ex.getMessage());
@@ -628,6 +629,20 @@ public class ProductosController implements Initializable {
                 alerta.setHeaderText("Error en SessionException");
                 alerta.setContentText(ex.getMessage());
                 alerta.show();
+            }
+            
+            try {
+                daoA.eliminarAltas(alta);
+            } catch (ConnectException ex) {
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (JDBCConnectionException ex) {
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (CommunicationsException ex) {
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvocationTargetException ex) {
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ExceptionInInitializerError ex) {
+                Logger.getLogger(ProductosController.class.getName()).log(Level.SEVERE, null, ex);
             }
             
             obtenerAltas();
