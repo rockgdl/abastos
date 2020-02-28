@@ -222,11 +222,12 @@ public class StockController implements Initializable {
                     baja.setPrecioVenta(Double.parseDouble(txtPrecio.getText()));
                     baja.setUnidad(boxUnidad.getValue());
     //                
-    //                
+    //             
+                    Double precio = 0.0;
                     if (boxProducto.getValue().getStock() >= cantidad){
                         Double cantidadTemp = cantidad;
                         int i = 0;
-                        List <Altas> listaRegistros = daoA.findAltaWhithRestante();
+                        List <Altas> listaRegistros = daoA.findAltaWhithRestante(boxProducto.getValue());
 
                         while (cantidadTemp > 0.0){
                             Bajas newBaja = new Bajas();
@@ -239,7 +240,7 @@ public class StockController implements Initializable {
                                 cantidadTemp = 0.0;
 
                             }else{
-                                newBaja.setCantidad(listaRegistros.get(i).getCantidad());
+                                newBaja.setCantidad(listaRegistros.get(i).getRestante());
                                 cantidadTemp = cantidadTemp - listaRegistros.get(i).getRestante();
 
                                 listaRegistros.get(i).setRestante(0.0);
@@ -251,8 +252,9 @@ public class StockController implements Initializable {
                             newBaja.setPrecioVenta(listaRegistros.get(i).getPrecioVenta());
                             newBaja.setProducto(boxProducto.getValue());
                             newBaja.setUnidad(boxUnidad.getValue());
-                            System.out.println("Nueva baja - " + newBaja.getCantidad() + " - " + newBaja.getPrecioVenta());
-
+                            //System.out.println("Nueva baja - " + newBaja.getCantidad() + " - " + newBaja.getPrecioVenta());
+                            
+                            precio += newBaja.getPrecioVenta() * newBaja.getCantidad();
                             daoB.agregarBajas(newBaja);
                             i++;
 
@@ -260,12 +262,14 @@ public class StockController implements Initializable {
                         //daoB.agregarBajas(baja);
 
                         Producto producto = baja.getProducto();
+                        producto.setCostoTotal(producto.getCostoTotal() - precio);
                         producto.setStock(producto.getStock() - baja.getCantidad());
                         daoP.updateProducto(producto);
                     }else{
                         //Mandar alerta
                         Alert alerta = new Alert(AlertType.ERROR);
-                        alerta.setHeaderText("No tiene se tiene en existencia tal cantidad");
+                        alerta.setHeaderText("No tiene esa cantidad");
+                        alerta.setContentText(boxProducto.getValue().getNombre() + " Tine en el stock " + boxProducto.getValue().getStock());
                         alerta.show();
                     }
 

@@ -91,7 +91,7 @@ public class ProductosController implements Initializable {
        
        @FXML TableView<Bajas> tablaBajas;
        @FXML TableColumn <Bajas, String> columnFechaBajas, columnProductoBajas, columnUnidadBajas;
-       @FXML TableColumn <Bajas, Double> columnPrecioBajas;
+       @FXML TableColumn <Bajas, Double> columnPrecioBajas, columnTotalBajas;
        @FXML TableColumn <Bajas, Integer> columnIdBajas, columnCantidadBajas;
        private ObservableList <Bajas> oblistBajas= FXCollections.observableArrayList();
        private BajasDao daoB=new BajasDaoMysql();
@@ -198,7 +198,7 @@ public class ProductosController implements Initializable {
             oblistProducto.addAll(dao.obtenerTodos());
             columnId.setCellValueFactory(new PropertyValueFactory("id"));
             columnNombre.setCellValueFactory(new PropertyValueFactory("nombre"));
-            columnDescripcion.setCellValueFactory(new PropertyValueFactory("descripcion"));
+            //columnDescripcion.setCellValueFactory(new PropertyValueFactory("descripcion"));
             columnStock.setCellValueFactory(new PropertyValueFactory("stock"));
             columnFecha.setCellValueFactory(new PropertyValueFactory("fechaAlta"));
             columnUnidad.setCellValueFactory(new PropertyValueFactory("unidad"));
@@ -310,6 +310,7 @@ public class ProductosController implements Initializable {
                 columnFechaBajas.setCellValueFactory(new PropertyValueFactory("fecha"));
                 columnIdBajas.setCellValueFactory(new PropertyValueFactory("id"));
                 columnPrecioBajas.setCellValueFactory(new PropertyValueFactory("precioVenta"));
+                columnTotalBajas.setCellValueFactory(new PropertyValueFactory("total"));
                 columnProductoBajas.setCellValueFactory(new PropertyValueFactory("producto"));
                 tablaBajas.setItems(oblistBajas);
             }catch (ConnectException ex) {

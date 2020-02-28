@@ -38,24 +38,22 @@
          <children>
             <TabPane layoutX="14.0" layoutY="8.0" prefHeight="650.0" prefWidth="1177.0" tabClosingPolicy="UNAVAILABLE">
               <tabs>
-                <Tab text="productos">
+                <Tab text="PRODUCTOS">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <Button layoutX="1025.0" layoutY="62.0" mnemonicParsing="false" onMouseClicked="#agregarProducto" text="Nuevo" />
-                              <Button layoutX="1025.0" layoutY="126.0" mnemonicParsing="false" onAction="#eliminarProducto" text="eliminar" />
-                              <TableView fx:id="tablaProductos" layoutX="26.0" layoutY="33.0" onMouseClicked="#editarProducto" prefHeight="504.0" prefWidth="928.0">
+                              <Button layoutX="891.0" layoutY="95.0" mnemonicParsing="false" onMouseClicked="#agregarProducto" text="Nuevo" />
+                              <Button layoutX="891.0" layoutY="159.0" mnemonicParsing="false" onAction="#eliminarProducto" text="eliminar" />
+                              <TableView fx:id="tablaProductos" layoutX="108.0" layoutY="63.0" onMouseClicked="#editarProducto" prefHeight="474.0" prefWidth="736.0">
                                  <columns>
-                                    <TableColumn fx:id="columnId" prefWidth="75.0" text="id" />
+                                    <TableColumn fx:id="columnId" prefWidth="75.0" text="ID" />
                                     <TableColumn fx:id="columnNombre" prefWidth="149.0" text="PRODUCTO" />
                                     <TableColumn fx:id="columnStock" prefWidth="107.0" text="CANTIDAD" />
-                                    <TableColumn fx:id="columnUnidad" prefWidth="75.0" text="UNIDAD" />
-                                    <TableColumn fx:id="columnDescripcion" prefWidth="219.0" text="descripcion" />
-                                    <TableColumn fx:id="columnCostoTotal" prefWidth="129.0" text="SALDO" />
-                                    <TableColumn fx:id="columnFecha" prefWidth="174.0" text="FECHA" />
+                                    <TableColumn fx:id="columnUnidad" prefWidth="99.0" text="UNIDAD" />
+                                    <TableColumn fx:id="columnCostoTotal" prefWidth="134.0" text="SALDO" />
+                                    <TableColumn fx:id="columnFecha" prefWidth="171.0" text="FECHA" />
                                  </columns>
                               </TableView>
-                              <Button layoutX="1029.0" layoutY="190.0" mnemonicParsing="false" onAction="#vista" text="vista" />
                            </children>
                         </AnchorPane>
                   </content>
@@ -67,12 +65,12 @@
                               <TableView fx:id="tablaAltas" layoutX="104.0" layoutY="123.0" onMouseClicked="#seleccionarAlta" prefHeight="365.0" prefWidth="909.0">
                                 <columns>
                                   <TableColumn fx:id="columnIdAltas" prefWidth="75.0" text="ID" />
-                                  <TableColumn fx:id="columnProductoAltas" prefWidth="220.0" text="Producto" />
-                                    <TableColumn fx:id="columnCantidadAltas" prefWidth="82.0" text="Cantidad" />
-                                    <TableColumn fx:id="columnUnidadAltas" prefWidth="123.0" text="Unidad" />
-                                    <TableColumn fx:id="columnPrecioAltas" prefWidth="113.0" text="Precio" />
-                                    <TableColumn fx:id="columnTotalAltas" prefWidth="120.0" text="Total" />
-                                    <TableColumn fx:id="columnFechaAltas" prefWidth="175.0" text="Fecha" />
+                                  <TableColumn fx:id="columnProductoAltas" prefWidth="220.0" text="PRODUCTO" />
+                                    <TableColumn fx:id="columnCantidadAltas" prefWidth="92.0" text="CANTIDAD" />
+                                    <TableColumn fx:id="columnUnidadAltas" prefWidth="113.0" text="UNIDAD" />
+                                    <TableColumn fx:id="columnPrecioAltas" prefWidth="113.0" text="PRECIO" />
+                                    <TableColumn fx:id="columnTotalAltas" prefWidth="120.0" text="TOTAL" />
+                                    <TableColumn fx:id="columnFechaAltas" prefWidth="175.0" text="FECHA" />
                                 </columns>
                               </TableView>
                               <Button layoutX="1082.0" layoutY="151.0" mnemonicParsing="false" onAction="#EliminarAlta" text="Eliminar" />
@@ -84,18 +82,19 @@
                            </children></AnchorPane>
                   </content>
                 </Tab>
-                  <Tab text="Bajas">
+                  <Tab text="BAJAS">
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
                               <TableView fx:id="tablaBajas" layoutX="104.0" layoutY="123.0" onMouseClicked="#seleccionarBaja" prefHeight="365.0" prefWidth="909.0">
                                  <columns>
                                     <TableColumn fx:id="columnIdBajas" prefWidth="75.0" text="ID" />
-                                    <TableColumn fx:id="columnProductoBajas" prefWidth="220.0" text="Producto" />
-                                    <TableColumn fx:id="columnCantidadBajas" prefWidth="82.0" text="Cantidad" />
-                                    <TableColumn fx:id="columnUnidadBajas" prefWidth="123.0" text="Unidad" />
-                                    <TableColumn fx:id="columnPrecioBajas" prefWidth="158.0" text="Precio" />
-                                    <TableColumn fx:id="columnFechaBajas" prefWidth="250.0" text="Fecha" />
+                                    <TableColumn fx:id="columnProductoBajas" prefWidth="220.0" text="PRODUCTO" />
+                                    <TableColumn fx:id="columnCantidadBajas" prefWidth="90.0" text="CANTIDAD" />
+                                    <TableColumn fx:id="columnUnidadBajas" prefWidth="115.0" text="UNIDAD" />
+                                    <TableColumn fx:id="columnPrecioBajas" prefWidth="112.0" text="PRECIO" />
+                                    <TableColumn fx:id="columnTotalBajas" prefWidth="121.0" text="TOTAL" />
+                                    <TableColumn fx:id="columnFechaBajas" prefWidth="175.0" text="FECHA" />
                                  </columns>
                               </TableView>
                               <Button layoutX="1078.0" layoutY="146.0" mnemonicParsing="false" onAction="#EliminarBaja" text="Eliminar" />

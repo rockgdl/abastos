@@ -91,9 +91,10 @@ public class PrincipalController implements Initializable {
      @FXML
     public void guardaProducto() throws IOException
     {        
-            if(descripcionField.getText().equals("") || conceptoField.getText().equals("") || comboUnidadMedida.getValue() == null){
+            if(conceptoField.getText().equals("") || comboUnidadMedida.getValue() == null){
                 Alert alerta = new Alert(Alert.AlertType.ERROR);
                 alerta.setHeaderText("Todos los campos deben de estar llenos");
+                alerta.setContentText("La descripcion se puede omitir");
                 alerta.show();
             }else{
                 try {

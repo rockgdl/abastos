@@ -37,6 +37,8 @@ public class Bajas {
     
     @Column(name = "precioVenta", nullable = false)
     private Double precioVenta;
+    
+    private Double total;
 
     /**
      * @return the id
@@ -120,5 +122,12 @@ public class Bajas {
      */
     public void setPrecioVenta(Double precioVenta) {
         this.precioVenta = precioVenta;
+    }
+
+    /**
+     * @return the total
+     */
+    public Double getTotal() {
+        return cantidad * precioVenta;
     }
 }
