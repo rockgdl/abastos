@@ -8,11 +8,14 @@ package com.fpiceno.abastos.controller;
 import com.fpiceno.abastos.dao.mysql.AltasDaoMysql;
 import com.fpiceno.abastos.dao.mysql.BajasDaoMysql;
 import com.fpiceno.abastos.dao.mysql.ProductoDaoMysql;
+import com.fpiceno.abastos.dao.mysql.ReporteDaoMysql;
 import com.fpiceno.abastos.dto.UnidadMedida;
 import com.fpiceno.abastos.entity.Producto;
+import com.fpiceno.abastos.entity.Reporte;
 import com.fpicneo.abastos.dao.AltasDao;
 import com.fpicneo.abastos.dao.BajasDao;
 import com.fpicneo.abastos.dao.ProductoDao;
+import com.fpicneo.abastos.dao.ReporteDao;
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.ConnectException;
@@ -336,6 +339,7 @@ public class VistaController implements Initializable {
    }
     
      @FXML private void buscar(ActionEvent event){
+         
             try {
                 tabla.getItems().clear();
                 Date fechaInicio = null, fechaFin = null;

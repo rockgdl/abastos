@@ -21,6 +21,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  *
@@ -34,7 +35,7 @@ public class Altas {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     
-    @Column(name = "fechaAlta", nullable = false)
+    @Column(name = "fecha", nullable = false)
     private Date fecha;
     
     @ManyToOne( fetch = FetchType.EAGER ) 
@@ -50,7 +51,7 @@ public class Altas {
     @Column(name = "precioVenta", nullable = false)
     private Double precioVenta;
     
-    @Column (name = "precioTotal", nullable = true)
+    @Transient
     private Double precioTotal;
     
     @Column (name = "Restante", nullable = false)
@@ -151,7 +152,7 @@ public class Altas {
      * @param precioTotal the precioTotal to set
      */
     public void setPrecioTotal(Double precioTotal) {
-        this.precioTotal = precioTotal;
+        this.precioTotal = cantidad * precioVenta;
     }
 
     /**

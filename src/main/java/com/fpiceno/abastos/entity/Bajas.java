@@ -22,11 +22,11 @@ public class Bajas {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     
-    @Column(name = "fechaBaja", nullable = false)
+    @Column(name = "fecha", nullable = false)
     private Date fecha;
     
     @ManyToOne( fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "producto", referencedColumnName = "id")
+    @JoinColumn(name = "id_producto", referencedColumnName = "id")
     private Producto producto;
     
     @Enumerated(EnumType.STRING)
@@ -37,7 +37,8 @@ public class Bajas {
     
     @Column(name = "precioVenta", nullable = false)
     private Double precioVenta;
-    
+
+    @Transient
     private Double total;
 
     /**
