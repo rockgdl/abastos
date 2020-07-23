@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
@@ -10,26 +11,29 @@
    <center>
       <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <TableView fx:id="tabla" layoutX="33.0" layoutY="232.0" prefHeight="365.0" prefWidth="987.0">
+            <TableView fx:id="tabla" layoutX="117.0" layoutY="232.0" prefHeight="365.0" prefWidth="819.0">
                <columns>
-                  <TableColumn fx:id="columnId" prefWidth="75.0" text="ID" />
-                  <TableColumn fx:id="columnTipo" prefWidth="99.0" text="Tipo" />
-                  <TableColumn fx:id="columnProducto" prefWidth="119.0" text="Producto" />
-                  <TableColumn fx:id="columnCantidad" prefWidth="159.0" text="Cantidad" />
-                  <TableColumn fx:id="columnUnidad" prefWidth="107.0" text="Unidad" />
-                  <TableColumn fx:id="columnPrecio" prefWidth="129.0" text="Precio Unitario" />
-                  <TableColumn fx:id="columnTotal" prefWidth="120.0" text="Saldo Final" />
-                  <TableColumn fx:id="columnFecha" prefWidth="175.0" text="Fecha" />
+                  <TableColumn fx:id="columnFecha" prefWidth="127.0" text="Fecha" />
+                  <TableColumn fx:id="columnTipo" prefWidth="121.0" text="Movimiento" />
+                  <TableColumn fx:id="columnCantidad" prefWidth="122.0" text="Cantidad" />
+                  <TableColumn fx:id="columnUnidad" prefWidth="97.0" text="Unidad" />
+                  <TableColumn fx:id="columnPrecio" prefWidth="116.0" text="Precio Unitario" />
+                  <TableColumn fx:id="columnSaldo" prefWidth="104.0" text="Saldo" />
+                  <TableColumn fx:id="columnTotal" prefWidth="129.0" text="Saldo Final" />
                </columns>
             </TableView>
             <Button layoutX="911.0" layoutY="108.0" mnemonicParsing="false" onAction="#buscar" text="Buscar" />
-            <ComboBox fx:id="boxProducto" layoutX="72.0" layoutY="108.0" prefHeight="31.0" prefWidth="273.0" />
-            <ComboBox fx:id="boxTipo" layoutX="388.0" layoutY="108.0" prefHeight="31.0" prefWidth="204.0" />
-            <DatePicker fx:id="txtFechaFin" layoutX="625.0" layoutY="132.0" />
-            <DatePicker fx:id="txtFechaInicio" layoutX="625.0" layoutY="77.0" />
-            <Label fx:id="lblCantidad" layoutX="72.0" layoutY="617.0" text="--" />
-            <Label fx:id="lblSaldoFinal" layoutX="72.0" layoutY="659.0" text="--" />
-            <Label fx:id="lblUltimoMes" layoutX="734.0" layoutY="201.0" text="--" />
+            <ComboBox fx:id="boxProducto" layoutX="72.0" layoutY="108.0" onAction="#buscar" prefHeight="31.0" prefWidth="273.0" />
+            <ComboBox fx:id="boxTipo" layoutX="388.0" layoutY="108.0" onAction="#buscar" prefHeight="31.0" prefWidth="204.0" />
+            <DatePicker fx:id="txtFechaFin" layoutX="625.0" layoutY="132.0" onAction="#buscar" />
+            <DatePicker fx:id="txtFechaInicio" layoutX="625.0" layoutY="77.0" onAction="#buscar" />
+            <Label fx:id="lblCantidad" layoutX="117.0" layoutY="627.0" text="--" />
+            <Label fx:id="lblSaldoFinal" layoutX="117.0" layoutY="669.0" text="--" />
+            <Label fx:id="lblUltimoMes" layoutX="617.0" layoutY="188.0" text="--">
+               <font>
+                  <Font size="20.0" />
+               </font></Label>
+            <Label fx:id="lblSaldoDelMes" layoutX="306.0" layoutY="627.0" text="Label" />
          </children>
       </Pane>
    </center>

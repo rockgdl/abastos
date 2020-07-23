@@ -6,7 +6,12 @@
 package com.fpiceno.abastos.entity;
 
 import com.fpiceno.abastos.dto.UnidadMedida;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.*;
 import org.hibernate.annotations.Subselect;
 
@@ -15,14 +20,10 @@ import org.hibernate.annotations.Subselect;
  * @author oswal
  */
 @Entity
-    @Subselect("SELECT CONCAT('Ba', b.id) AS folio, b.*, 'baja' as tipo FROM bajas b INNER JOIN Producto p ON p.id=b.id_producto UNION ALL SELECT CONCAT('Al', a.id) AS folio, a.id, a.cantidad, a.fecha, a.precioVenta, a.unidad, a.id_producto, 'alta' as tipo FROM altas a INNER JOIN Producto p ON p.id=a.id_producto")
+    @Subselect("SELECT b.*, 'baja' as tipo FROM bajas b INNER JOIN Producto p ON p.id=b.id_producto UNION ALL SELECT a.id, a.cantidad, a.fecha, a.precioVenta, a.unidad, a.id_producto, 'alta' as tipo FROM altas a INNER JOIN Producto p ON p.id=a.id_producto")
 public class Reporte {
     
     @Id
-    private String folio;
-    
-    //Este es el id que corresponde al registro tanto de la tabla altas como la tablas de basjas
-    @Column
     private Integer id;
     
     @Column
@@ -46,6 +47,17 @@ public class Reporte {
     
     @Transient
     private Double saldoFinal = 0.0;
+    
+    @Transient
+    private Double saldo;
+
+    public Double getSaldo() {
+        if (getTipo().replace(" ", "").equals("alta"))
+            return precioVenta*cantidad;
+        else
+            return 0-(precioVenta*cantidad);
+    }
+
 
     public Double getSaldoFinal() {
         return saldoFinal;
@@ -86,8 +98,10 @@ public class Reporte {
     /**
      * @return the fecha
      */
-    public Date getFecha() {
-        return fecha;
+    public String getFecha() {
+        
+        SimpleDateFormat formato = new SimpleDateFormat ("dd/MM/yyyy");
+        return formato.format(fecha);
     }
 
     /**
@@ -153,23 +167,9 @@ public class Reporte {
         this.tipo = tipo;
     }
 
-    /**
-     * @return the folio
-     */
-    public String getFolio() {
-        return folio;
-    }
-
-    /**
-     * @param folio the folio to set
-     */
-    public void setFolio(String folio) {
-        this.folio = folio;
-    }
-
     @Override
     public String toString() {
-        return "Reporte{" + "folio=" + folio + ", id=" + id + ", cantidad=" + cantidad + ", fecha=" + fecha + ", precioVenta=" + precioVenta + ", unidad=" + unidad + ", producto=" + producto + ", tipo=" + tipo + '}';
+        return "Reporte{" + "id=" + id + ", cantidad=" + cantidad + ", fecha=" + fecha + ", precioVenta=" + precioVenta + ", unidad=" + unidad + ", producto=" + producto + ", tipo=" + tipo + '}';
     }
     
     

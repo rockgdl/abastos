@@ -7,13 +7,16 @@ package com.fpiceno.abastos.controller;
 
 import com.fpiceno.abastos.dao.mysql.AltasDaoMysql;
 import com.fpiceno.abastos.dao.mysql.BajasDaoMysql;
+import com.fpiceno.abastos.dao.mysql.HistoricoReporteDaoMysql;
 import com.fpiceno.abastos.dao.mysql.ProductoDaoMysql;
 import com.fpiceno.abastos.dao.mysql.ReporteDaoMysql;
 import com.fpiceno.abastos.dto.UnidadMedida;
+import com.fpiceno.abastos.entity.HistoricoReporte;
 import com.fpiceno.abastos.entity.Producto;
 import com.fpiceno.abastos.entity.Reporte;
 import com.fpicneo.abastos.dao.AltasDao;
 import com.fpicneo.abastos.dao.BajasDao;
+import com.fpicneo.abastos.dao.HistoricoReporteDao;
 import com.fpicneo.abastos.dao.ProductoDao;
 import com.fpicneo.abastos.dao.ReporteDao;
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;
@@ -56,9 +59,9 @@ public class VistaController implements Initializable {
     private Logger LOG=Logger.getLogger(this.getClass().getSimpleName());
     
     @FXML TableView<Reporte> tabla;
-    @FXML TableColumn <Reporte, String> columnProducto, columnFecha, columnTipo;
-    @FXML TableColumn <Reporte, Double> columnPrecio, columnTotal;
-    @FXML TableColumn <Reporte, Integer> columnId, columnCantidad;
+    @FXML TableColumn <Reporte, String> columnFecha, columnTipo;
+    @FXML TableColumn <Reporte, Double> columnPrecio, columnTotal, columnSaldo;
+    @FXML TableColumn <Reporte, Integer> columnCantidad;
     @FXML TableColumn <Reporte, UnidadMedida> columnUnidad;
 
     private ObservableList <Reporte> oblist= FXCollections.observableArrayList();
@@ -67,12 +70,14 @@ public class VistaController implements Initializable {
     @FXML ComboBox<String> boxTipo;
     
     @FXML DatePicker txtFechaInicio, txtFechaFin;
-    @FXML Label lblCantidad, lblSaldoFinal, lblUltimoMes;
+    @FXML Label lblCantidad, lblSaldoFinal, lblUltimoMes, lblSaldoDelMes;
     
     ReporteDao daoR = new ReporteDaoMysql();
     ProductoDao daoP = new ProductoDaoMysql();
+    HistoricoReporteDao daoH = new HistoricoReporteDaoMysql();
     
-    
+    private Date ultimaFecha = null;
+        
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         String[] tipos = {"","Alta", "Baja"};
@@ -82,6 +87,7 @@ public class VistaController implements Initializable {
         boxTipo.getSelectionModel().select(0);
         
         obtenerDatos();
+        
     }    
 
     private void obtenerDatos(){
@@ -89,22 +95,23 @@ public class VistaController implements Initializable {
         columnCantidad.setCellValueFactory(new PropertyValueFactory("cantidad"));
         columnUnidad.setCellValueFactory(new PropertyValueFactory("unidad"));
         columnFecha.setCellValueFactory(new PropertyValueFactory("fecha"));
-        columnId.setCellValueFactory(new PropertyValueFactory("folio"));
+        //columnId.setCellValueFactory(new PropertyValueFactory("folio"));
         columnTipo.setCellValueFactory(new PropertyValueFactory("tipo"));
         columnPrecio.setCellValueFactory(new PropertyValueFactory("precioVenta"));
-        columnProducto.setCellValueFactory(new PropertyValueFactory("producto"));
+        //columnProducto.setCellValueFactory(new PropertyValueFactory("producto"));
         columnTotal.setCellValueFactory(new PropertyValueFactory("saldoFinal"));
+        columnSaldo.setCellValueFactory(new PropertyValueFactory("saldo"));
         
         try{
-            oblist.addAll(daoR.findReporte());
+            
             boxProducto.getItems().setAll(daoP.obtenerTodos());
+            boxProducto.getSelectionModel().select(0);
+            oblist.addAll(daoR.findReporteForProducto(boxProducto.getItems().get(0)));
             
-            Double saldo = saldoUltimoMes(new Date());
-            
-            calcular(oblist, saldo);
+            calcular(oblist, new Date());
             tabla.setItems(oblist);
             
-            lblUltimoMes.setText("El saldo del último mes es de: " + saldo);
+            lblUltimoMes.setText("El saldo del último mes es de: ");
         } catch (ConnectException ex) {
             LOG.info("Error de ConnectException:" + ex.getMessage());
                  Alert alerta = new Alert(Alert.AlertType.ERROR);
@@ -187,8 +194,8 @@ public class VistaController implements Initializable {
          
         if (verificar()){    
                 tabla.getItems().clear();
-                Date fechaInicio = null, fechaFin = null;
-                Double ultimoMes = 0.0;
+                Date fechaInicio = new Date();
+                Date fechaFin = null;
                  
                 
                 if(txtFechaFin.getValue() == null){
@@ -203,56 +210,24 @@ public class VistaController implements Initializable {
                 //Iniciamos la comparacion de los casos 
                
                 
-                if(boxProducto.getValue() == null && txtFechaInicio.getValue() == null && boxTipo.getValue() == ""){
-                //Si todos los campos estan vacios hace una busqueda en general    
-                    oblist.addAll(daoR.findReporte());
-                    ultimoMes = saldoUltimoMes(new Date());
-                    
-                }else if(boxProducto.getValue() != null && txtFechaInicio.getValue() != null && boxTipo.getValue() != ""){
-                //Si todos los campos estan llenos buscara pot fecha producto y tipo
-                    
-                    fechaInicio = Date.from(txtFechaInicio.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-                    oblist.addAll(daoR.findReporteForProductoAndTipoAndFecha(boxProducto.getValue(), boxTipo.getValue(), fechaInicio, fechaFin));
-                    
-                    ultimoMes = saldoUltimoMes(fechaInicio);
-                    
-                }else if(boxProducto.getValue() != null && txtFechaInicio.getValue() != null){
-                //Buscar por producto y fecha   
-                    fechaInicio = Date.from(txtFechaInicio.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-                    oblist.addAll(daoR.findReporteForProductoAndFecha(boxProducto.getValue(), fechaInicio, fechaFin));
-                    ultimoMes = saldoUltimoMes(fechaInicio);
-                    
-                }else if(boxProducto.getValue() != null && boxTipo.getValue() != ""){
-                //Buscar por producto y tipo
-                    
-                    oblist.addAll(daoR.findReporteForProductoAndTipo(boxProducto.getValue(), boxTipo.getValue()));
-                    ultimoMes = saldoUltimoMes(new Date());
-                    
-                }else if(boxTipo.getValue() != "" && txtFechaInicio.getValue() != null){
+                if(boxTipo.getValue() != "" && txtFechaInicio.getValue() != null){
                 //Buscar por tipo y fecha
                     fechaInicio = Date.from(txtFechaInicio.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
                     oblist.addAll(daoR.findReporteForTipoAndFecha(boxTipo.getValue(), fechaInicio, fechaFin));
-                    ultimoMes = saldoUltimoMes(fechaInicio);
+                    
                     
                 }else if (boxTipo.getValue() != ""){
                 //Buscar por tipo
                     oblist.addAll(daoR.findReporteForTipo(boxTipo.getValue()));
-                    ultimoMes = saldoUltimoMes(new Date());
+                    
                     
                 }else if(txtFechaInicio.getValue() != null){
                 //Buscar por fecha
                     fechaInicio = Date.from(txtFechaInicio.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-                    oblist.addAll(daoR.findReporteForFecha(fechaInicio, fechaFin));
-                    ultimoMes = saldoUltimoMes(fechaInicio);
-                    
-                }else if(boxProducto.getValue() != null){
-                //Buscar por producto    
-                    oblist.addAll(daoR.findReporteForProducto(boxProducto.getValue()));
-                    ultimoMes = saldoUltimoMes(new Date());
+                    oblist.addAll(daoR.findReporteForFecha(fechaInicio, fechaFin));    
                 }
                 
-                lblUltimoMes.setText("El saldo del último mes es de: " + ultimoMes);
-                calcular(oblist, ultimoMes);
+                calcular(oblist, fechaInicio);
                 tabla.setItems(oblist);
                 
         }
@@ -273,9 +248,12 @@ public class VistaController implements Initializable {
         return true;
     }
      
-     private void calcular(List<Reporte> listaReportes, Double ultimoMes){
-         Double total=ultimoMes;
-         Double cantidad=0.0;
+     private void calcular(List<Reporte> listaReportes, Date fecha){
+         HistoricoReporte historico = daoH.ultimoReporte(fecha, listaReportes.get(0).getProducto());
+         
+         Double total= 0.0;
+         Double cantidad=historico.getCantidad();
+         Double saldoMes=historico.getSaldoFinal();
          
          for(Reporte reporte: listaReportes){
              Double totalTemp = reporte.getPrecioVenta()*reporte.getCantidad();
@@ -283,33 +261,41 @@ public class VistaController implements Initializable {
              
              if(reporte.getTipo().replace(" ", "").equals("alta")){
                  total += totalTemp;
+                 saldoMes += totalTemp;
                  cantidad += cantidadTemp;
              }else{
                  total -= totalTemp;
+                 saldoMes -= totalTemp;
                  cantidad -= cantidadTemp;
              }
              
              reporte.setSaldoFinal(total);    
          }
          
+         lblUltimoMes.setText("El saldo del último mes es de: " + historico.getSaldoFinal());
          lblCantidad.setText("Cantidad en almacen: " + cantidad);
+         lblSaldoDelMes.setText("Saldo del mes: " + saldoMes);
+         
          lblSaldoFinal.setText("Saldo Final: " + total);
      }
      
-     public Double saldoUltimoMes(Date fecha){
-         Calendar calI = Calendar.getInstance();
-         calI.setTime(fecha);
-         calI.add(Calendar.MONTH, -1);
-         calI.set(Calendar.DAY_OF_MONTH, calI.getActualMinimum(Calendar.DAY_OF_MONTH));
-            
-         Calendar calF = Calendar.getInstance();
-         calF.setTime(fecha);
-         calF.add(Calendar.MONTH, -1);
-         calF.set(Calendar.DAY_OF_MONTH, calI.getActualMaximum(Calendar.DAY_OF_MONTH));
+//     public Double saldoUltimoMes(Date fecha){
+//         Calendar calI = Calendar.getInstance();
+//         calI.setTime(fecha);
+//         calI.add(Calendar.MONTH, -1);
+//         calI.set(Calendar.DAY_OF_MONTH, calI.getActualMinimum(Calendar.DAY_OF_MONTH));
+//            
+//         Calendar calF = Calendar.getInstance();
+//         calF.setTime(fecha);
+//         calF.add(Calendar.MONTH, -1);
+//         calF.set(Calendar.DAY_OF_MONTH, calI.getActualMaximum(Calendar.DAY_OF_MONTH));
+//         
+//         return daoR.lastReporte(calI.getTime(), calF.getTime());
+//     }
+     
+     public void terminarReporte(){
+         Date fechaActual = new Date();
          
-         
-         
-         return daoR.lastReporte(calI.getTime(), calF.getTime());
      }
 }
     
