@@ -38,5 +38,6 @@
     <mapping class="com.fpiceno.abastos.entity.Bajas" file="" jar="" package="" resource=""/>
     <mapping class="com.fpiceno.abastos.entity.Cliente" file="" jar="" package="" resource=""/>
     <mapping class="com.fpiceno.abastos.entity.Reporte" file="" jar="" package="" resource=""/>
+    <mapping class="com.fpiceno.abastos.entity.HistoricoReporte" file="" jar="" package="" resource=""/>
   </session-factory>
 </hibernate-configuration>

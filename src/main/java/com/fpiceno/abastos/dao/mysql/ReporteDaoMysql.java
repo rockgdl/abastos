@@ -71,11 +71,11 @@ public class ReporteDaoMysql implements ReporteDao{
     }
 
     @Override
-    public List<Reporte> findReporteForTipo(String tipo) {
+    public List<Reporte> findReporteForTipo(String tipo, Date fecha) {
         Session session = getSession();
         Transaction tx = session.beginTransaction();
         Criteria cr=session.createCriteria(Reporte.class);
-        cr.add(Restrictions.eq("tipo", tipo)).add(Restrictions.between("fecha", firstDay, new Date()));
+        cr.add(Restrictions.eq("tipo", tipo)).add(Restrictions.between("fecha", fecha, new Date()));
         List<Reporte> lista=cr.list();
         tx.commit();
         return lista;
@@ -112,7 +112,7 @@ public class ReporteDaoMysql implements ReporteDao{
     }
 
     @Override
-    public List<Reporte> findReporteForProductoAndTipo(Producto producto, String tipo) {
+    public List<Reporte> findReporteForProductoAndTipo(Producto producto, String tipo, Date fechaInicio) {
         Session session = getSession();
         session.beginTransaction();
         Criteria cr=session.createCriteria(Reporte.class);
@@ -141,11 +141,11 @@ public class ReporteDaoMysql implements ReporteDao{
     }
 
     @Override
-    public List<Reporte> findReporteForProducto(Producto producto) {
+    public List<Reporte> findReporteForProducto(Producto producto, Date fecha) {
         Session session = getSession();
         Transaction tx = session.beginTransaction();
         Criteria cr=session.createCriteria(Reporte.class);
-        cr.add(Restrictions.eq("producto", producto)).add(Restrictions.between("fecha", firstDay, new Date()));
+        cr.add(Restrictions.eq("producto", producto)).add(Restrictions.between("fecha", fecha, new Date()));
         List<Reporte> lista=cr.list();
         tx.commit();
         return lista;

@@ -6,9 +6,12 @@
 package com.fpiceno.abastos.controller;
 
 import com.fazecast.jSerialComm.SerialPort;
+import com.fpiceno.abastos.dao.mysql.HistoricoReporteDaoMysql;
 import com.fpiceno.abastos.dao.mysql.ProductoDaoMysql;
 import com.fpiceno.abastos.dto.UnidadMedida;
+import com.fpiceno.abastos.entity.HistoricoReporte;
 import com.fpiceno.abastos.entity.Producto;
+import com.fpicneo.abastos.dao.HistoricoReporteDao;
 import com.fpicneo.abastos.dao.ProductoDao;
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 import java.io.DataInputStream;
@@ -74,6 +77,7 @@ public class PrincipalController implements Initializable {
 
     
     private ProductoDao dao=new ProductoDaoMysql();
+    private HistoricoReporteDao daoH = new HistoricoReporteDaoMysql();
     
     private Producto producto;
     
@@ -119,6 +123,18 @@ public class PrincipalController implements Initializable {
                         newProducto.setStock(0.0);//es la primera vez
                         newProducto.setCostoTotal(0.0); //igual es su primer vez
                         dao.agregarProducto(newProducto);
+                        
+                        HistoricoReporte historico = new HistoricoReporte();
+                        historico.setCantidad(0.0);
+                        historico.setFechaFin(new Date());
+                        historico.setFechaInicio(new Date());
+                        historico.setSaldoFinal(0.0);
+                        
+                        //System.out.println(dao.findProducto(newProducto));
+                        Producto pro = dao.findProducto(newProducto);
+                        historico.setProducto(pro);
+                        
+                        daoH.insertHistorico(historico);
                     }
                 } catch (ConnectException ex) {
 

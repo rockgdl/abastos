@@ -89,10 +89,13 @@ public class ProductoDaoMysql implements ProductoDao{
             return HibernateUtil.getSession();
     }
 
-    public List<Producto> findProducto(Producto producto) throws ConnectException, JDBCConnectionException, CommunicationsException, InvocationTargetException, ExceptionInInitializerError {
-        Criteria cr = getSession().createCriteria(Producto.class);
+    @Override
+    public Producto findProducto(Producto producto) throws ConnectException, JDBCConnectionException, CommunicationsException, InvocationTargetException, ExceptionInInitializerError {
+        Session session = getSession();
+        session.beginTransaction();
+        Criteria cr = session.createCriteria(Producto.class);
         cr.add(Restrictions.eq("nombre", producto.getNombre()));
-        return cr.list();
+        return (Producto) cr.list().get(0);
     }
     
 }

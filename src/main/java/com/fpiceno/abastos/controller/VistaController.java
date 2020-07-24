@@ -76,6 +76,8 @@ public class VistaController implements Initializable {
     ProductoDao daoP = new ProductoDaoMysql();
     HistoricoReporteDao daoH = new HistoricoReporteDaoMysql();
     
+    HistoricoReporte historico = null;
+    
     private Date ultimaFecha = null;
         
     @Override
@@ -83,7 +85,6 @@ public class VistaController implements Initializable {
         String[] tipos = {"","Alta", "Baja"};
         
         boxTipo.getItems().addAll(tipos);
-        
         boxTipo.getSelectionModel().select(0);
         
         obtenerDatos();
@@ -104,14 +105,13 @@ public class VistaController implements Initializable {
         
         try{
             
+            
             boxProducto.getItems().setAll(daoP.obtenerTodos());
             boxProducto.getSelectionModel().select(0);
-            oblist.addAll(daoR.findReporteForProducto(boxProducto.getItems().get(0)));
             
-            calcular(oblist, new Date());
-            tabla.setItems(oblist);
+            buscar();
+            //tabla.setItems(oblist);
             
-            lblUltimoMes.setText("El saldo del último mes es de: ");
         } catch (ConnectException ex) {
             LOG.info("Error de ConnectException:" + ex.getMessage());
                  Alert alerta = new Alert(Alert.AlertType.ERROR);
@@ -190,11 +190,11 @@ public class VistaController implements Initializable {
     
 
     
-     @FXML private void buscar(ActionEvent event){
+     @FXML private void buscar(){
          
         if (verificar()){    
                 tabla.getItems().clear();
-                Date fechaInicio = new Date();
+                Date fechaInicio = null;
                 Date fechaFin = null;
                  
                 
@@ -213,21 +213,27 @@ public class VistaController implements Initializable {
                 if(boxTipo.getValue() != "" && txtFechaInicio.getValue() != null){
                 //Buscar por tipo y fecha
                     fechaInicio = Date.from(txtFechaInicio.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-                    oblist.addAll(daoR.findReporteForTipoAndFecha(boxTipo.getValue(), fechaInicio, fechaFin));
-                    
+                    historico = daoH.ultimoReporte(fechaInicio, boxProducto.getValue());
+                    oblist.addAll(daoR.findReporteForProductoAndTipoAndFecha(boxProducto.getValue(),boxTipo.getValue(), fechaInicio, fechaFin));
                     
                 }else if (boxTipo.getValue() != ""){
                 //Buscar por tipo
-                    oblist.addAll(daoR.findReporteForTipo(boxTipo.getValue()));
-                    
+                    historico = daoH.ultimoReporte(new Date(), boxProducto.getValue());
+                    oblist.addAll(daoR.findReporteForProductoAndTipo(boxProducto.getValue(),boxTipo.getValue(), this.historico.getFechaFin()));
                     
                 }else if(txtFechaInicio.getValue() != null){
                 //Buscar por fecha
                     fechaInicio = Date.from(txtFechaInicio.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-                    oblist.addAll(daoR.findReporteForFecha(fechaInicio, fechaFin));    
+                    historico = daoH.ultimoReporte(fechaInicio, boxProducto.getValue());
+                    oblist.addAll(daoR.findReporteForProductoAndFecha(boxProducto.getValue(), fechaInicio, fechaFin));
+                
+                }else if (boxProducto.getValue() != null){
+                //Buscar por producto
+                    historico = daoH.ultimoReporte(new Date(), boxProducto.getValue());
+                    oblist.addAll(daoR.findReporteForProducto(boxProducto.getValue(), this.historico.getFechaFin()));
                 }
                 
-                calcular(oblist, fechaInicio);
+                calcular(oblist);
                 tabla.setItems(oblist);
                 
         }
@@ -243,17 +249,21 @@ public class VistaController implements Initializable {
             alerta.setContentText("No puedes consultar con una fecha final sin una fehca de inicio");
             alerta.show();
             return false;
+        }else if(boxProducto.getValue() == null){
+            alerta.setHeaderText("Se encotro un error");
+            alerta.setContentText("Se debe de seleccionar un producto");
+            alerta.show();
+            return false;
         }
         
         return true;
     }
      
-     private void calcular(List<Reporte> listaReportes, Date fecha){
-         HistoricoReporte historico = daoH.ultimoReporte(fecha, listaReportes.get(0).getProducto());
-         
+     private void calcular(List<Reporte> listaReportes){
+        
          Double total= 0.0;
-         Double cantidad=historico.getCantidad();
-         Double saldoMes=historico.getSaldoFinal();
+         Double cantidad=this.historico.getCantidad();
+         Double saldoMes=this.historico.getSaldoFinal();
          
          for(Reporte reporte: listaReportes){
              Double totalTemp = reporte.getPrecioVenta()*reporte.getCantidad();

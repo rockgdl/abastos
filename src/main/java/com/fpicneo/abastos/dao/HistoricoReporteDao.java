@@ -16,7 +16,7 @@ import java.util.List;
  */
 public interface HistoricoReporteDao {
     
-    public List<HistoricoReporte> ultimoReporte(Date fecha, Producto produto);
+    public HistoricoReporte ultimoReporte(Date fecha, Producto produto);
     public List<HistoricoReporte> findHistorico();
     public void insertHistorico(HistoricoReporte historico);
     public void uptadeHistorico(Producto producto, Date fechaFin);

@@ -15,6 +15,7 @@ import javax.persistence.*;
 @Entity
 public class HistoricoReporte {
     @Id
+    @GeneratedValue
     private Integer id;
     
     @Column(name="saldoFinal")
@@ -29,7 +30,7 @@ public class HistoricoReporte {
     @Column(name = "fechaFin")
     private Date fechaFin;
     
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "id_Producto")
     private Producto producto;
 
@@ -80,6 +81,12 @@ public class HistoricoReporte {
     public void setProducto(Producto producto) {
         this.producto = producto;
     }
+
+    public HistoricoReporte() {
+        this.saldoFinal = 0.0;
+        this.cantidad = 0.0;
+    }
+    
     
     @Override
     public String toString() {

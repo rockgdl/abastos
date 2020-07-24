@@ -23,6 +23,6 @@ public interface ProductoDao {
     public void updateProducto(Producto producto)throws ConnectException,JDBCConnectionException,CommunicationsException,InvocationTargetException,ExceptionInInitializerError;
     public void eliminarProducto(Producto producto)throws ConnectException,JDBCConnectionException,CommunicationsException,InvocationTargetException,ExceptionInInitializerError,SQLException;
     public List<Producto> obtenerTodos() throws ConnectException,JDBCConnectionException,CommunicationsException,InvocationTargetException,ExceptionInInitializerError;
-    
+    public Producto findProducto(Producto producto)throws ConnectException,JDBCConnectionException,CommunicationsException,InvocationTargetException,ExceptionInInitializerError;
     
 }

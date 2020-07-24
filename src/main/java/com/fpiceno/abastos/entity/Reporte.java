@@ -20,10 +20,13 @@ import org.hibernate.annotations.Subselect;
  * @author oswal
  */
 @Entity
-    @Subselect("SELECT b.*, 'baja' as tipo FROM bajas b INNER JOIN Producto p ON p.id=b.id_producto UNION ALL SELECT a.id, a.cantidad, a.fecha, a.precioVenta, a.unidad, a.id_producto, 'alta' as tipo FROM altas a INNER JOIN Producto p ON p.id=a.id_producto")
+    @Subselect("SELECT CONCAT('BA', b.id) AS folio, b.*, 'baja' as tipo FROM bajas b INNER JOIN Producto p ON p.id=b.id_producto UNION ALL SELECT CONCAT('AL', a.id) AS folio, a.id, a.cantidad, a.fecha, a.precioVenta, a.unidad, a.id_producto, 'alta' as tipo FROM altas a INNER JOIN Producto p ON p.id=a.id_producto")
 public class Reporte {
     
-    @Id
+    @Id        
+    String folio;
+            
+    @Column
     private Integer id;
     
     @Column
@@ -66,6 +69,16 @@ public class Reporte {
     public void setSaldoFinal(Double saldoFinal) {
         this.saldoFinal = saldoFinal;
     }
+
+    public String getFolio() {
+        return folio;
+    }
+
+    public void setFolio(String folio) {
+        this.folio = folio;
+    }
+
+
     
     /**
      * @return the id

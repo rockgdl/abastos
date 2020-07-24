@@ -17,12 +17,12 @@ import java.util.List;
 public interface ReporteDao {
     public List<Reporte> findReporte();
     public List<Reporte> findReporteForProductoAndTipoAndFecha(Producto producto, String tipo, Date fechaInicio, Date fechaFin);
-    public List<Reporte> findReporteForProductoAndTipo(Producto producto, String tipo);
+    public List<Reporte> findReporteForProductoAndTipo(Producto producto, String tipo, Date fecha);
     public List<Reporte> findReporteForProductoAndFecha(Producto producto, Date fechaInicio, Date fechaFin);
     public List<Reporte> findReporteForTipoAndFecha(String tipo, Date fechaInicio, Date fechaFin);
-    public List<Reporte> findReporteForTipo(String tipo);
+    public List<Reporte> findReporteForTipo(String tipo, Date fecha);
     public List<Reporte> findReporteForFecha(Date fechaInicio, Date fechaFin);
-    public List<Reporte> findReporteForProducto(Producto producto);
+    public List<Reporte> findReporteForProducto(Producto producto, Date fecha);
     public Double lastReporte(Date fechaInicio, Date fechaFinal);
     
 }

@@ -16,6 +16,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
@@ -58,8 +59,10 @@ public class HistoricoReporteDaoMysql implements HistoricoReporteDao{
         
         cr.add(Restrictions.lt("fechaFin", fecha)).add(Restrictions.eq("producto", produto)).addOrder(Order.desc("fechaFin"));
         
-        
-        return (HistoricoReporte) cr.list().get(0);
+        if (cr.list().size() <= 0)
+            return new HistoricoReporte();
+        else
+            return (HistoricoReporte) cr.list().get(0);
     }
 
     @Override
@@ -70,14 +73,12 @@ public class HistoricoReporteDaoMysql implements HistoricoReporteDao{
     @Override
     public void insertHistorico(HistoricoReporte historico) {
         Session session = getSession();
-        
         session.beginTransaction();
-        
+
         session.save(historico);
-        
         session.getTransaction().commit();
-        
-        session.close();
+
+        getSession().close();
     }
 
     @Override
